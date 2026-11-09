@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}学习项目{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/agent-workspace.css?v=20261026b">
+<script src="/static/learning-project.js?v=20261109a" defer></script>
+{% endblock %}
+{% block content %}
+{% set failure_labels = {
+  'missing_citations':'正文缺少有效引用',
+  'source_changed':'资料已更新，请重新检索',
+  'source_or_context_changed':'来源或上下文已变化，旧结果不可继续使用',
+  'provider_uncertain':'上次生成结果未知，重试可能再次计费',
+  'validation_failed':'生成内容未通过校验',
+  'task_failed':'任务未完成，请重新创建',
+  'cancelled':'任务已取消',
+  'insufficient_evidence':'没有找到足够资料',
+  'provider_unavailable':'问答服务尚未配置'
+} %}
+{% set status_labels = {'queued':'等待执行','running':'执行中','waiting_user':'等待确认','succeeded':'已完成','failed':'执行失败','cancelled':'已取消','answering':'继续作答','submitted':'查看反馈任务','reviewed':'查看作答反馈','archived':'已归档','unavailable':'资料已变化'} %}
+<div id="learning-project" data-csrf="{{ csrf }}" data-project-id="{{ project.id if project else '' }}" data-note-ids="{{ note_ids|join(',') }}">
+  <div class="page-head"><p class="eyebrow">个人知识循环</p><h1>学习项目</h1><p>选择笔记，引用问答，独立练习，再把结论写回笔记。离开后可以回到同一个项目。</p><a href="/learn">学习与复习</a> · <a href="/explore">知识求索</a></div>
+  <p id="learning-notice" class="agent-notice" role="status" aria-live="polite" hidden></p>
+  {% if not project %}
+  <div class="agent-grid">
+    <section class="agent-card"><h2>新建学习项目</h2>
+      <form id="learning-create" class="stack-form">
+        <label for="learning-title">项目名称</label><input id="learning-title" required maxlength="120" placeholder="例如：闭包复习">
+        <label for="learning-goal">目标</label><textarea id="learning-goal" rows="3" maxlength="2000" placeholder="希望弄清什么？"></textarea>
+        <label for="learning-notes">笔记 ID，用逗号分隔，最多 12 篇</label><input id="learning-notes" value="{{ note_ids|join(',') }}" inputmode="numeric" placeholder="可先留空，稍后再加入">
+        <button class="button" type="submit">创建学习项目</button>
+      </form>
+    </section>
+    <section class="agent-card"><h2>我的学习项目</h2>
+      {% if projects %}
+      <ul>{% for item in projects %}<li><a href="/learn/projects/{{ item.id }}">{{ item.title }}</a> · {{ '进行中' if item.status=='active' else '已归档' }}</li>{% endfor %}</ul>
+      {% else %}<p>还没有学习项目。可以从当前笔记开始，或先创建再加入笔记。</p>{% endif %}
+    </section>
+  </div>
+  {% else %}
+  <p><a href="/learn/projects">返回全部学习项目</a></p>
+  <div class="agent-grid">
+    <section class="agent-card"><h2>{{ project.title }}</h2><p>{{ project.goal }}</p>
+      <p>{{ '进行中' if project.status=='active' else '已归档' }}</p>
+      <h3>资料范围</h3>
+      {% if project.learning.scope %}
+      <ul>{% for note in project.learning.scope %}<li>{% if note.available %}<a href="{{ note.url }}">{{ note.title }}</a>{% else %}{{ note.title }}{% endif %}</li>{% endfor %}</ul>
+      {% else %}<p>当前没有绑定笔记。</p>{% endif %}
+      <form id="learning-scope" class="stack-form">
+        <label for="learning-scope-notes">调整笔记 ID，最多 12 篇</label>
+        <input id="learning-scope-notes" value="{{ project.learning.scope|map(attribute='note_id')|join(',') }}">
+        <button class="button" type="submit">保存资料范围</button>
+      </form>
+      {% if project.learning.thread %}<p><a class="button" href="{{ project.learning.thread.url }}">继续这条问答</a></p>
+      {% else %}<p><button id="learning-open" class="button" type="button">打开问答</button></p>{% endif %}
+    </section>
+    <section class="agent-card"><h2>问答</h2>
+      {% if project.learning.thread %}
+      <p>{{ ui("共 {0} 条消息").format(project.learning.thread.message_count) }}</p>
+      {% if project.learning.thread.source_changed %}<p role="status">资料已更新，请重新检索</p>{% endif %}
+      {% if project.learning.thread.citations %}<ul>{% for source in project.learning.thread.citations %}<li><a href="{{ source.url }}">{{ source.title }}</a></li>{% endfor %}</ul>{% endif %}
+      {% else %}<p>还没有问答。绑定笔记后可以开始。</p>{% endif %}
+      <form id="learning-research" class="stack-form">
+        <h3>研究</h3>
+        <label for="learning-topic">研究问题</label><textarea id="learning-topic" required maxlength="1000" rows="3"></textarea>
+        <label for="learning-requirements">补充要求</label><textarea id="learning-requirements" maxlength="2000" rows="3"></textarea>
+        <button class="button" type="submit">开始研究</button>
+      </form>
+    </section>
+    <section class="agent-card"><h2>练习</h2>
+      {% if project.learning.cards %}
+      <ul>{% for card in project.learning.cards %}<li>{{ card.question }} · <a href="/n/{{ card.note_id }}">{{ card.title }}</a>
+        {% if card.source_changed %}<span role="status">这张卡片的原文已更新。</span>
+        {% elif learning_enabled %}<form method="post" action="/learn/cards/{{ card.id }}/practice"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="project_id" value="{{ project.id }}"><input type="hidden" name="practice_key" value="{{ csrf }}-{{ project.id }}-{{ card.id }}-{{ card.version }}"><button class="button button-light">独立作答</button></form>{% endif %}
+      </li>{% endfor %}</ul>
+      {% else %}<p>还没有这些笔记上的练习卡片。</p>{% endif %}
+      {% if project.learning.scope %}<p>{% for note in project.learning.scope if note.available %}<a href="/learn?note_id={{ note.note_id }}">制作自测题：{{ note.title }}</a> {% endfor %}</p>{% endif %}
+      {% if project.learning.practice %}<h3>未完成和最近的作答</h3><ul>{% for item in project.learning.practice %}<li>{% if item.question %}<a href="/learn/practice/{{ item.id }}">{{ item.question }}</a>{% else %}<a href="/learn/practice/{{ item.id }}">作答记录</a>{% endif %} · {{ ui(status_labels.get(item.status, item.status)) }}{% if item.answer_draft %} · {{ item.answer_draft }}{% endif %}{% if item.job %} · {{ ui(status_labels.get(item.job.status, item.job.status)) }}{% if item.job.error_code %} · {{ ui(failure_labels.get(item.job.error_code, item.job.error_code)) }}{% endif %}{% endif %}</li>{% endfor %}</ul>{% endif %}
+    </section>
+    <section class="agent-card"><h2>草稿与写回</h2>
+      {% if project.learning.drafts %}<ul>{% for draft in project.learning.drafts %}<li><a href="{{ draft.url }}">{{ draft.title or '打开草稿' }}</a></li>{% endfor %}</ul>{% endif %}
+      {% if project.learning.proposals %}<ul>{% for proposal in project.learning.proposals %}<li><a href="{{ proposal.url }}">打开修改建议</a> · {{ proposal.status }}</li>{% endfor %}</ul>{% endif %}
+      {% if not project.learning.drafts and not project.learning.proposals %}<p>还没有写回草稿。</p>{% endif %}
+    </section>
+    <section class="agent-card"><h2>任务</h2>
+      {% if project.learning.active_jobs %}
+      <h3>进行中</h3>
+      <ul>{% for job in project.learning.active_jobs %}<li><a href="{{ job.url }}">{{ job.topic }}</a> · {{ ui(status_labels.get(job.status, job.status)) }}{% if job.error_code %} · {{ ui(failure_labels.get(job.error_code, job.error_code)) }}{% endif %}
+        {% if job.status=='waiting_user' %}<button type="button" class="button button-light" data-resume="{{ job.id }}" data-uncertain="{{ 'true' if job.error_code=='provider_uncertain' else 'false' }}">确认恢复</button>{% endif %}
+      </li>{% endfor %}</ul>
+      {% endif %}
+      {% if project.learning.last_failure %}
+      <h3>上次失败</h3>
+      <p role="status" data-failure="{{ project.learning.last_failure.error_code }}">{{ ui(failure_labels.get(project.learning.last_failure.error_code, '任务未完成，请重新创建')) }}</p>
+      <p><a href="{{ project.learning.last_failure.url }}">查看任务</a></p>
+      {% if project.learning.last_failure.kind=='knowledge' %}<button id="learning-retry" class="button" type="button" data-run="{{ project.learning.last_failure.id }}">用当前资料重试</button>{% endif %}
+      {% elif not project.learning.active_jobs %}<p>还没有研究或反馈任务。</p>{% endif %}
+      {% if project.learning.latest_research %}
+      <h3>最近的研究结果</h3>
+      {% if project.learning.latest_research.source_changed %}<p role="status">资料已更新，请重新检索</p>
+      {% elif project.learning.latest_research.citations %}<ul>{% for source in project.learning.latest_research.citations %}<li><a href="{{ source.url }}">{{ source.title }}</a></li>{% endfor %}</ul>{% endif %}
+      <p><a href="{{ project.learning.latest_research.url }}">查看任务</a></p>
+      {% endif %}
+    </section>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

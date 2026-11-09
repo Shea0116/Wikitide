@@ -15,6 +15,7 @@
   let pickerRevision = 0;
   let backgroundRequest = '', backgroundKey = '';
   let sessionId = null;
+  let projectKind = '';
   let asking = false;
   let searchRevision = 0;
   let readerRevision = 0;
@@ -72,6 +73,12 @@
     if (scope === 'selected') url.searchParams.set('scope', scope);
     else url.searchParams.delete('scope');
     if (scope === 'selected' && selectedNotes.length > 1) selectedNotes.forEach(note => url.searchParams.append('note_ids', String(note.id)));
+    const projectLink = $('learning-project');
+    if (projectLink) {
+      const target = new URL('/learn/projects', location.origin);
+      if (scope === 'selected') selectedNotes.forEach(note => target.searchParams.append('note_ids', String(note.id)));
+      projectLink.href = target.pathname + target.search;
+    }
     history.replaceState(null, '', url);
     controls();
   }
@@ -88,11 +95,16 @@
     $('open-original').href = '/browse';
   }
 
+  function keepLearningThread() {
+    if (projectKind === 'learning' && sessionId) {notice(window.WikitideI18n.t("学习项目只有一条问答，请从项目继续。"), true); return true;}
+    return false;
+  }
   function resetSession(id = noteId, title = noteTitle, nextScope = scope, notes = nextScope === 'selected' ? selectedNotes : []) {
     if (unavailableDuringAnswer()) return false;
     if (!window.dispatchEvent(new CustomEvent('explore-before-session-change', {cancelable: true}))) return false;
     sessionRevision++;
     sessionId = null;
+    projectKind = '';
     noteId = id; noteTitle = title;
     clearResearch();
     scope = nextScope;
@@ -136,6 +148,7 @@
       } catch (error) {if (revision === pickerRevision) $('selection-status').textContent = error.message;}
     });
     $('apply-selection').addEventListener('click', () => {
+      if (keepLearningThread()) return;
       const notes = [...pickedNotes.values()].sort((a, b) => a.id - b.id);
       if (!notes.length) {$('selection-status').textContent = window.WikitideI18n.t("请选择一篇笔记。"); return;}
       if (resetSession(notes.length === 1 ? notes[0].id : null, notes.length === 1 ? notes[0].title : '', 'selected', notes)) $('selection').open = false;
@@ -244,6 +257,7 @@
         read.addEventListener('click', () => openArticle(hit.note_id, hit.url));
         const ask = element('button', '', window.WikitideI18n.t("围绕本文提问")); ask.type = 'button';
         ask.addEventListener('click', () => {
+          if (keepLearningThread()) return;
           if (!resetSession(hit.note_id, hit.title, scope, scope === 'selected' ? [{id: hit.note_id, title: hit.title}] : [])) return;
           if (!$('question').value.trim()) $('question').value = query;
           if (window.exploreTrial.available && aiReady) $('question').focus();
@@ -326,6 +340,7 @@
       if (asking || revision !== sessionRevision) return;
       clearResearch();
       sessionId = detail.id; noteId = detail.note_id; noteTitle = detail.note_title;
+      projectKind = detail.project_kind || '';
       scope = detail.scope || 'public';
       selectedNotes = detail.notes || (noteId ? [{id: noteId, title: noteTitle}] : []);
       pickedNotes.clear(); selectedNotes.forEach(note => pickedNotes.set(note.id, note)); renderPickedNotes();
@@ -390,8 +405,10 @@
   $('background')?.addEventListener('click', async () => {
     const topic = $('question').value.trim();
     if (!topic || asking) return;
+    const projectId = window.wikiTideAgentExplore?.requestContext().project_id || null;
     const body = {kind: 'knowledge', topic, scope, note_id: noteId,
       note_ids: scope === 'selected' && !noteId ? selectedNotes.map(note => note.id) : [],
+      ...(projectId ? {project_id: projectId} : {}),
       memory_mode: 'off', max_tokens: 48000, max_search_calls: 3};
     const signature = JSON.stringify(body);
     if (signature !== backgroundRequest) {backgroundRequest = signature; backgroundKey = crypto.randomUUID();}
@@ -416,8 +433,8 @@
   root.querySelectorAll('[data-query]').forEach(button => button.addEventListener('click', () => {
     $('query').value = button.dataset.query; search();
   }));
-  $('new').addEventListener('click', () => resetSession());
-  $('all').addEventListener('click', () => resetSession(null, '', 'public'));
+  $('new').addEventListener('click', () => {if (!keepLearningThread()) resetSession();});
+  $('all').addEventListener('click', () => {if (!keepLearningThread()) resetSession(null, '', 'public');});
   $('close-reader').addEventListener('click', () => {$('reader').hidden = true; readerRevision++;});
   $('messages').addEventListener('click', event => {
     const link = event.target.closest('a');

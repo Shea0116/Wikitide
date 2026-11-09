@@ -112,7 +112,11 @@ def transfer_discussion(app, db, user, mid):
     title = snapshot['question'][:200]
     db.execute('''INSERT INTO explore_drafts(id,user_id,topic,title,body,sources,stage,created_at,updated_at)
         VALUES(?,?,?,?,?,?,'draft',?,?)''', (did, user['id'], title, title, body, compact_json(snapshot['sources']), now, now))
-    db.execute("INSERT INTO agent_draft_context(draft_id,memory_mode) VALUES(?,'off')", (did,))
+    link = db.execute('SELECT project_id FROM agent_session_links WHERE session_id=?', (snapshot['session_id'],)).fetchone()
+    project_id = link['project_id'] if link else None
+    db.execute("INSERT INTO agent_draft_context(draft_id,project_id,memory_mode) VALUES(?,?,'off')", (did, project_id))
+    if project_id:
+        db.execute('INSERT OR IGNORE INTO agent_project_links(project_id,resource_kind,resource_id,created_at) VALUES(?,?,?,?)', (project_id, 'draft', did, now))
     db.execute('INSERT INTO discussion_draft_origins VALUES(?,?,?,?,?,?,1,?)',
                (user['id'], snapshot['session_id'], mid, did, snapshot['sha'], compact_json(snapshot['refs']), now))
     record_dependencies(db, user['id'], snapshot['refs'], 'draft', did)
@@ -166,7 +170,10 @@ def transfer(app, db, user, rid):
     title = data['topic'][:200]
     db.execute('''INSERT INTO explore_drafts(id,user_id,topic,requirements,title,body,sources,stage,created_at,updated_at)
         VALUES(?,?,?,?,?,?,?,'draft',?,?)''', (did, user['id'], title, data['requirements'], title, body, compact_json(report['sources']), now, now))
-    db.execute('INSERT INTO agent_draft_context(draft_id,memory_mode) VALUES(?,\'off\')', (did,))
+    project_id = data.get('project_id')
+    db.execute("INSERT INTO agent_draft_context(draft_id,project_id,memory_mode) VALUES(?,?,'off')", (did, project_id))
+    if project_id:
+        db.execute('INSERT OR IGNORE INTO agent_project_links(project_id,resource_kind,resource_id,created_at) VALUES(?,?,?,?)', (project_id, 'draft', did, now))
     db.execute('INSERT INTO knowledge_draft_origins VALUES(?,?,?,?,?)', (rid, did, compact_json(refs), int(any(ref['kind'] == 'account_note' for ref in refs)), now))
     record_dependencies(db, user['id'], refs, 'draft', did)
     return {'draft_id': did, 'url': '/explore/write?draft_id=' + did}

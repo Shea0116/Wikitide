@@ -102,6 +102,16 @@ MIGRATIONS = {
           kind TEXT NOT NULL,reserved_tokens INTEGER NOT NULL,charged_tokens INTEGER,status TEXT NOT NULL DEFAULT 'reserved',created_at INTEGER NOT NULL)''',
         'CREATE INDEX ix_agent_usage_owner ON agent_usage_reservations(user_id,created_at)',
     ],
+    7: [
+        "ALTER TABLE agent_projects ADD COLUMN kind TEXT NOT NULL DEFAULT 'container'",
+        '''CREATE TABLE agent_project_scope (
+          project_id TEXT NOT NULL REFERENCES agent_projects(id) ON DELETE CASCADE,
+          note_id INTEGER NOT NULL, position INTEGER NOT NULL,
+          PRIMARY KEY(project_id,note_id))''',
+        '''CREATE TABLE agent_project_threads (
+          project_id TEXT PRIMARY KEY REFERENCES agent_projects(id) ON DELETE CASCADE,
+          session_id TEXT NOT NULL UNIQUE REFERENCES explore_sessions(id) ON DELETE CASCADE)''',
+    ],
 }
 
 
