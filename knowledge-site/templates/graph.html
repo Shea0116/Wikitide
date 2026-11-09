@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}关系图谱{% endblock %}
+{% block body_class %}graph-page{% endblock %}
+{% block page_head %}
+  <link rel="stylesheet" href="/static/graph.css?v=20261002b">
+  <script src="/static/sphere.js?v=20261002b" defer></script>
+  <script src="/static/graph.js?v=20261102a" defer></script>
+{% endblock %}
+{% block content %}
+<section class="graph-heading" aria-labelledby="graph-title">
+  <div><p class="eyebrow">CONNECTED KNOWLEDGE</p><h1 id="graph-title">关系图谱<span>让零散的知识，彼此相连。</span></h1></div>
+  <p class="graph-permission">{% if user %}展示你有权查看的笔记{% else %}当前展示公开笔记{% endif %}<span>一个节点是一篇笔记，一条线是一次引用。</span></p>
+</section>
+<div class="graph-workspace" id="graph-workspace" aria-busy="true">
+  <aside class="graph-sidebar" aria-label="图谱筛选与笔记详情">
+    <details class="graph-filters" open>
+      <summary>探索范围 <span aria-hidden="true">−</span></summary>
+      <div class="graph-filter-fields">
+        <label for="graph-query">查找笔记</label>
+        <input id="graph-query" type="search" placeholder="输入标题关键词" autocomplete="off">
+        <label for="graph-category">知识方向</label>
+        <select id="graph-category"><option value="">全部目录</option></select>
+        <div class="graph-checkboxes">
+          <label><input id="graph-isolated" type="checkbox" checked>显示未连接笔记</label>
+          <label><input id="graph-labels" type="checkbox" checked>显示节点标题</label>
+        </div>
+        <p class="graph-filter-note">颜色代表根目录，节点越大，连接越多。近处清晰，远处淡出。</p>
+        <div id="graph-legend" class="graph-legend" aria-label="目录颜色"></div>
+      </div>
+    </details>
+    <section class="graph-selection" aria-label="选中笔记">
+      <div class="graph-panel-label"><h2>笔记与连接</h2><button id="graph-clear" type="button" aria-label="取消选择" hidden>×</button></div>
+      <div id="graph-selection-empty"><p class="graph-selection-prompt">从一个节点开始</p><p>点击图中的节点，查看它引用的笔记，以及指向它的线索。</p></div>
+      <div id="graph-selection-detail" hidden>
+        <p id="graph-selected-category" class="graph-selected-category"></p>
+        <h3 id="graph-selected-title" aria-live="polite"></h3>
+        <a id="graph-open-note" class="graph-open-note" href="/browse">阅读笔记 <span aria-hidden="true">↗</span></a>
+        <label class="graph-depth-label" for="graph-depth">连接范围</label>
+        <select id="graph-depth"><option value="all">完整图谱</option><option value="1">一度连接</option><option value="2">二度连接</option></select>
+        <div class="graph-relations"><h4>引用了 <span id="graph-out-count">0</span></h4><ul id="graph-outgoing"></ul></div>
+        <div class="graph-relations"><h4>被引用 <span id="graph-in-count">0</span></h4><ul id="graph-incoming"></ul></div>
+      </div>
+    </section>
+    <details class="graph-note-picker">
+      <summary>笔记列表 <span id="graph-list-count">0</span></summary>
+      <p class="graph-list-hint">也可以从列表中选择一个节点。</p>
+      <ul id="graph-note-list"></ul>
+      <button id="graph-more-notes" class="graph-more" type="button" hidden>显示更多</button>
+    </details>
+  </aside>
+  <section class="graph-visual" aria-label="知识关系画布">
+    <div class="graph-toolbar"><p id="graph-stats" role="status" aria-live="polite">正在连接知识…</p><button id="graph-reset" type="button">全部图谱 <span aria-hidden="true">↗</span></button></div>
+    <div class="graph-canvas-wrap" id="graph-canvas-wrap">
+      <canvas id="graph-canvas" tabindex="0" aria-label="3D球形关系图谱，拖动旋转，滚轮或双指缩放" aria-describedby="graph-help">请使用左侧笔记列表查看知识关系。</canvas>
+      <span class="graph-sphere-badge" aria-hidden="true">3D / SPHERE</span>
+      <div class="graph-view-controls" aria-label="画布视图">
+        <button id="graph-spin" type="button" aria-pressed="false" aria-label="开启自动旋转" title="开启自动旋转"><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 10a8 8 0 1 0-2.2 7.5M20 4v6h-6"/></svg></button>
+        <button id="graph-zoom-in" type="button" aria-label="放大图谱" title="放大">+</button>
+        <button id="graph-zoom-out" type="button" aria-label="缩小图谱" title="缩小">−</button>
+        <button id="graph-fit" type="button" aria-label="重置视角" title="重置视角"><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m8 0h4v-4"/></svg></button>
+      </div>
+      <div id="graph-tooltip" class="graph-tooltip" role="tooltip" hidden><strong></strong><span></span></div>
+      <div id="graph-message" class="graph-message" role="status"><span class="graph-loading-mark" aria-hidden="true">◎</span><strong>正在绘制关系图谱</strong><p>为每一个想法，找到它的位置。</p><button id="graph-retry" type="button" hidden>重新加载</button></div>
+      <noscript><div class="graph-message"><strong>开启 JavaScript 即可探索图谱</strong><p><a href="/browse">也可以继续浏览全部笔记 →</a></p></div></noscript>
+      <div class="graph-watermark" aria-hidden="true">识汐 <span>WIKITIDE / CONNECTIONS</span></div>
+    </div>
+    <div class="graph-bottom-bar"><p id="graph-help">拖动旋转 · 滚轮 / 双指缩放 · 双击节点阅读<span class="sr-only">。方向键旋转，加减号缩放，0重置视角，Escape取消选择；可从列表选择节点。</span></p><span id="graph-scale" aria-label="当前缩放比例">100%</span></div>
+  </section>
+</div>
+<p class="graph-footnote">图谱自动读取笔记中的双链与站内链接。编辑并保存笔记后，重新打开图谱即可看到新的连接。<a href="/browse">回到笔记目录 →</a></p>
+{% endblock %}

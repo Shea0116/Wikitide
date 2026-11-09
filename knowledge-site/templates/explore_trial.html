@@ -1,0 +1,3 @@
+{% if trial %}
+<p id="explore-trial" class="explore-service-note" data-remaining="{{ trial.remaining }}" role="status" aria-live="polite"><span id="explore-trial-message">{% if trial.remaining %}免费体验剩余 {{ trial.remaining }} / {{ trial.limit }} 次。{% else %}三次免费体验已用完。{% endif %}</span> <a href="/login?next={{ request.url.path }}">登录后继续使用</a>。文章问答与文档写作共享次数，每次成功回答或生成扣一次，失败不扣。次数随当前浏览器保留。</p>
+{% endif %}

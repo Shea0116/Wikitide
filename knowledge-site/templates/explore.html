@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}知识求索{% endblock %}
+{% block body_class %}explore-page{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/explore.css?v=20261107b">
+<script src="/static/explore-trial.js?v=20261102a" defer></script>
+<script src="/static/explore.js?v=20261107d" defer></script>
+{% if workspace_enabled %}
+<link rel="stylesheet" href="/static/agent-workspace.css?v=20261026b">
+<script src="/static/agent-explore.js?v=20261107a" defer></script>
+{% endif %}
+{% if context_enabled %}
+<link rel="stylesheet" href="/static/agent-context.css?v=20261026a">
+<script src="/static/agent-context.js?v=20261102a" defer></script>
+{% endif %}
+{% endblock %}
+{% block content %}
+<div id="explore" data-artifacts-enabled="{{ 'true' if artifacts_enabled else 'false' }}" data-csrf="{{ csrf or '' }}" data-scope="{{ selected_scope }}" data-selected-notes="{{ selected_notes|tojson|forceescape }}" data-research-ready="{{ 'true' if research_ready else 'false' }}" data-note-id="{{ selected_note.id if selected_note else '' }}" data-note-title="{{ selected_note.title if selected_note else '' }}" data-authenticated="{{ 'true' if user else 'false' }}" data-ai-ready="{{ 'true' if ai_ready else 'false' }}" data-web-ready="{{ 'true' if web_ready else 'false' }}">
+  <nav class="explore-mode-tabs" aria-label="知识求索功能"><a href="/explore" aria-current="page">文章问答</a><a href="/explore/write{% if selected_note and selected_scope == 'public' %}?note_id={{ selected_note.id }}{% endif %}">知识文档写作</a></nav>
+  <header class="explore-intro">
+    <div><p class="eyebrow">从一个问题，走进知识</p><h1>知识求索<span aria-hidden="true">✧</span></h1><p>找到相关的文章，循着原文，把问题问明白。</p></div>
+    <span id="explore-scope-badge" class="explore-badge">{{ '所选笔记' if selected_scope == 'selected' else '公开技术笔记' }}</span>
+  </header>
+  <form id="explore-search" class="explore-search" role="search">
+    <label class="sr-only" for="explore-query">搜索文章或输入一个问题</label>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+    <input id="explore-query" type="search" maxlength="500" placeholder="例如：React 闭包为什么会拿到旧值？" required autocomplete="off">
+    <button type="submit" class="button">寻找线索 <span aria-hidden="true">↗</span></button>
+  </form>
+  <div class="explore-suggestions" aria-label="试试这些问题">
+    <span>试着问</span><button type="button" data-query="Promise 和 async await 有什么区别">Promise 与 async/await</button><button type="button" data-query="React 闭包">React 闭包</button><button type="button" data-query="浏览器 性能优化">浏览器性能优化</button>
+  </div>
+  <div id="explore-notice" class="explore-notice" role="status" aria-live="polite" hidden></div>
+  <div class="explore-workspace">
+    <section class="explore-results-panel" aria-labelledby="explore-results-title">
+      <div class="explore-panel-heading"><h2 id="explore-results-title">文章线索</h2><span id="explore-result-count">等待搜索</span></div>
+      <p id="explore-search-mode" class="explore-help">从标题、章节和正文中寻找依据。</p>
+      <div id="explore-results" class="explore-results"><div class="explore-empty"><span aria-hidden="true">⌕</span><p>好问题，是探索的开始。</p><small>输入关键词或一句完整的问题。</small></div></div>
+    </section>
+    <section class="explore-conversation-panel" aria-labelledby="explore-conversation-title">
+      <div class="explore-panel-heading"><h2 id="explore-conversation-title">循文问答</h2><button type="button" id="explore-new" class="explore-text-button">新会话 ＋</button></div>
+      <div class="explore-scope"><span id="explore-scope-label">{{ '围绕：' ~ selected_note.title if selected_note else '范围：多篇公开笔记' }}</span><button type="button" id="explore-all" class="explore-text-button" {% if not selected_note and selected_scope != 'selected' %}hidden{% endif %}>使用公开笔记</button></div>
+      {% if selected_knowledge_enabled %}
+      <details id="explore-selection" class="explore-selection">
+        <summary>选择资料</summary>
+        <form id="explore-note-search"><label for="explore-note-query">搜索可访问的笔记</label><div class="explore-selection-search"><input id="explore-note-query" maxlength="100" type="search"><button type="submit">查找</button></div></form>
+        <div id="explore-note-options"></div><div id="explore-picked-notes"></div>
+        <p id="explore-selection-status" class="explore-help" role="status"></p>
+        <button type="button" id="explore-apply-selection">使用所选资料开启新会话</button>
+      </details>
+      {% endif %}
+      {% include "explore_trial.html" %}
+      {% if workspace_enabled %}
+      <details id="agent-explore-tools" class="agent-explore-tools" data-csrf="{{ csrf }}">
+        <summary>项目与长期记忆</summary>
+        <label for="agent-explore-project">所属项目 <select id="agent-explore-project"><option value="">无项目</option></select></label>
+        <label><input id="agent-explore-memory" type="checkbox" checked> 使用已确认的账户与项目记忆</label>
+        <p class="agent-help">项目目标用于本次任务；关闭长期记忆后，后续提问不再检索账户与项目记忆。</p>
+        <p id="agent-explore-status" role="status"></p><div id="agent-explore-used"></div>
+        <a href="/agent/projects">项目工作台 ↗</a> · <a href="/agent/memories">管理记忆 ↗</a>
+      </details>
+      <dialog id="agent-remember-dialog" class="agent-remember-dialog"><form id="agent-remember-form"><h2>确认要记住的内容</h2><p class="agent-help">可修改内容后保存，下次相关提问时使用。</p><label for="agent-remember-content">记忆内容</label><textarea id="agent-remember-content" required maxlength="1000"></textarea><label for="agent-remember-scope">生效范围</label><select id="agent-remember-scope"><option value="account">整个账户</option><option value="project">当前项目</option></select><label for="agent-remember-kind">类型</label><select id="agent-remember-kind"><option value="preference">表达与工作偏好</option><option value="project_fact">项目事实</option><option value="experience">任务经历</option></select><p id="agent-remember-status" role="status"></p><div class="agent-actions"><button id="agent-remember-save" type="submit" class="button">确认记住</button><button id="agent-remember-cancel" type="button">取消</button></div></form></dialog>
+      {% endif %}
+      {% if context_enabled %}
+      <details id="agent-context-panel" class="agent-context-panel" data-csrf="{{ csrf }}">
+        <summary>本次会话要求与摘要</summary>
+        <p id="agent-context-status" role="status">首条回答后，可以固定本次会话的要求。</p>
+        <label for="agent-context-constraints">固定要求，每行一条</label>
+        <textarea id="agent-context-constraints" rows="3" maxlength="1007" placeholder="例如：面向初学者，保留代码示例" disabled></textarea>
+        <button id="agent-context-save" type="button" disabled>保存固定要求</button>
+        <button id="agent-context-reload" type="button" disabled>重新读取</button>
+        <p class="explore-help">仅用于当前会话；清空后保存可移除要求。摘要保留任务线索，重要要求请单独固定。</p>
+        <div id="agent-context-summary"></div>
+      </details>
+      {% endif %}
+      {% if not ai_ready %}<p class="explore-service-note">问答等待管理员配置 DeepSeek，搜索与阅读已可使用。</p>{% endif %}
+      <div id="explore-messages" class="explore-messages" role="log" aria-label="问答记录" aria-live="polite"><div class="explore-welcome"><span aria-hidden="true">✧</span><h3>让每个答案，都有来处。</h3><p>搜索后，可以围绕找到的文章提问；<br>也可以直接在这里写下你的问题。</p></div></div>
+      <form id="explore-ask" class="explore-composer">
+        <label class="sr-only" for="explore-question">向知识求索提问</label>
+        <textarea id="explore-question" maxlength="1000" rows="3" placeholder="写下问题，或继续追问……" required {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}></textarea>
+        <div class="explore-response-options" role="group" aria-label="回答方式">
+          <label><input id="explore-fast" name="response-mode" type="radio" value="fast" checked {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}> 快速响应</label>
+          <label><input id="explore-thinking" name="response-mode" type="radio" value="thinking" {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}> 深入思考</label>
+          {% if research_ready %}<label title="按问题补查相关章节，会增加等待时间和模型用量。"><input id="explore-research" type="checkbox"> 补查资料</label>{% endif %}
+          <label title="{{ '检索网页摘要，并附来源链接' if web_ready else '管理员配置搜索服务后启用' }}"><input id="explore-web" type="checkbox" {% if not ai_ready or (trial and not trial.remaining) or not web_ready %}disabled{% endif %}> 联网搜索{% if not web_ready %}<span class="explore-option-status">待配置</span>{% endif %}</label>
+        </div>
+        <div class="explore-composer-bottom"><small id="explore-mode-help">快速响应：简明作答，边生成边显示。</small>{% if background_ready %}<a href="/agent/tasks">研究与反馈任务</a><button type="button" id="explore-background">后台研究</button>{% endif %}<button class="button" type="submit" {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}>发送问题 ↑</button></div>
+        <small id="explore-selected-help" {% if selected_scope != 'selected' %}hidden{% endif %}>发送问题后，所选笔记的相关片段和本次会话会交给 DeepSeek 生成回答。</small>
+        <small id="explore-public-help" {% if selected_scope == 'selected' %}hidden{% endif %}>开启联网后，问题及追问主题会发送给 Tavily 搜索，网页摘要交给 DeepSeek。引用可打开来源核对。Ctrl / ⌘ + Enter 发送。</small>
+      </form>
+    </section>
+  </div>
+  <section id="explore-reader" class="explore-reader" aria-labelledby="explore-reader-title" hidden>
+    <div class="explore-panel-heading"><h2 id="explore-reader-title">原文阅读</h2><div><a id="explore-open-original" href="/browse" target="_blank" rel="noopener">打开原文 ↗</a><button type="button" id="explore-close-reader" class="explore-text-button">收起</button></div></div>
+    <article id="explore-article" class="prose"></article>
+  </section>
+  {% if user %}<details class="explore-history"><summary>最近的探索</summary><p class="explore-help">会话保存在当前账户下，最多显示最近 30 条。</p><div id="explore-history-list"></div></details>{% endif %}
+</div>
+{% endblock %}

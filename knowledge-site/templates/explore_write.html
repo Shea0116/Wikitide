@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}知识文档写作{% endblock %}
+{% block body_class %}explore-page writing-page{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/explore.css?v=20261023a">
+<link rel="stylesheet" href="/static/explore-write.css?v=20261019a">
+<script src="/static/explore-trial.js?v=20261102a" defer></script>
+<script src="/static/explore-write.js?v=20261107a" defer></script>
+{% if workspace_enabled %}<link rel="stylesheet" href="/static/agent-workspace.css?v=20261026b">{% endif %}
+{% endblock %}
+{% block content %}
+<div id="explore" class="writing" data-csrf="{{ csrf or '' }}" data-workspace-enabled="{{ 'true' if workspace_enabled else 'false' }}" data-authenticated="{{ 'true' if user else 'false' }}" data-ai-ready="{{ 'true' if ai_ready else 'false' }}" data-web-ready="{{ 'true' if web_ready else 'false' }}" data-admin="{{ 'true' if user and user.role == 'admin' else 'false' }}" data-note-id="{{ selected_note.id if selected_note else '' }}">
+  <nav class="explore-mode-tabs" aria-label="知识求索功能"><a href="/explore{% if selected_note %}?note_id={{ selected_note.id }}{% endif %}">文章问答</a><a href="/explore/write" aria-current="page">知识文档写作</a></nav>
+  <header class="explore-intro"><div><p class="eyebrow">把线索，写成自己的知识</p><h1>知识文档写作<span aria-hidden="true">✧</span></h1><p>从资料到提纲，再到一篇可以修改、引用和留下的文档。</p></div><span class="explore-badge">二期 · 文稿工作台</span></header>
+  {% include "explore_trial.html" %}
+  {% if not ai_ready %}<p class="explore-service-note">写作等待管理员配置 DeepSeek。</p>{% endif %}
+  <div id="writing-notice" class="explore-notice" role="status" aria-live="polite" hidden></div>
+  {% if workspace_enabled %}<section class="agent-explore-tools" aria-label="项目与长期记忆"><label for="writing-project">所属项目 <select id="writing-project"><option value="">无项目</option></select></label><label><input id="writing-memory" type="checkbox" checked> 使用已确认的账户与项目记忆</label><button id="writing-link-project" type="button" hidden>保存项目关联</button><p id="writing-project-status" class="agent-help" role="status">新文稿会使用当前项目。已有文稿调整项目后，请先保存关联。关闭曾使用的记忆后，请重新检索并生成提纲。</p><div id="writing-used-memory"></div><a href="/agent/projects">项目与后台任务 ↗</a></section>{% endif %}
+  <div class="writing-layout">
+    <aside class="writing-rail">
+      <section class="writing-card"><div class="explore-panel-heading"><h2>1. 写作主题</h2><button id="writing-new" class="explore-text-button" type="button">新文稿 ＋</button></div>
+        <form id="writing-start">
+          <label for="writing-topic">想写什么？</label><input id="writing-topic" maxlength="200" placeholder="例如：从原理到实践理解 React 闭包" required {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}>
+          <label for="writing-requirements">读者与写作要求</label><textarea id="writing-requirements" rows="4" maxlength="2000" placeholder="例如：面向有基础的前端开发者，包含示例、适用条件和易错点。" {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}></textarea>
+          <label for="writing-length">篇幅</label><select id="writing-length" {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}><option value="short">短篇 · 约 800 字</option><option value="standard" selected>标准 · 约 1800 字</option><option value="long">长篇 · 约 3000 字</option></select>
+          <label class="writing-checkbox"><input id="writing-web" type="checkbox" {% if not ai_ready or (trial and not trial.remaining) or not web_ready %}disabled{% endif %}> 联网补充资料{% if not web_ready %}<small>待配置</small>{% endif %}</label>
+          <p id="writing-scope-help" class="explore-help">{% if selected_note %}本地资料限于《{{ selected_note.title }}》。{% else %}从公开技术笔记中检索依据。{% endif %}开启联网后，主题会发送给 Tavily，网页摘要交给 DeepSeek。</p>
+          <button id="writing-research" type="submit" class="button" {% if not ai_ready or (trial and not trial.remaining) %}disabled{% endif %}>检索资料并生成提纲 ↗</button>
+        </form>
+      </section>
+      <section class="writing-card"><div class="explore-panel-heading"><h2>资料依据</h2><span id="writing-source-count">等待检索</span></div><p class="explore-help">笔记引用核对原文，网页资料核对摘要与检索时间。</p><div id="writing-sources" class="writing-sources"><p class="explore-help">生成提纲后，资料会出现在这里。</p></div></section>
+      {% if user %}<section class="writing-card"><div class="explore-panel-heading"><h2>我的文稿</h2><button id="writing-refresh" class="explore-text-button" type="button">刷新</button></div><p class="explore-help">仅当前账户可见，显示最近 50 份。</p><div id="writing-history"></div></section>{% endif %}
+    </aside>
+    <section class="writing-card writing-editor" aria-labelledby="writing-editor-heading">
+      <div class="explore-panel-heading"><h2 id="writing-editor-heading">2. 提纲与成稿</h2><span id="writing-save-status">等待开始</span></div>
+      <div id="writing-empty" class="explore-empty"><span aria-hidden="true">✧</span><p>先把问题想清楚，再让知识成篇。</p><small>填写左侧主题，生成一份可以修改的提纲。</small></div>
+      <div id="writing-document" hidden>
+        <label for="writing-title">文稿标题</label><input id="writing-title" maxlength="200">
+        <details class="writing-outline" open><summary>写作提纲 · 可以直接修改</summary><label class="sr-only" for="writing-outline">写作提纲</label><textarea id="writing-outline" maxlength="10000" rows="9" spellcheck="false"></textarea><button id="writing-compose" type="button" class="button">按提纲撰写正文 ↓</button></details>
+        <div class="writing-document-toolbar"><div class="explore-mode-tabs" role="group" aria-label="文稿视图"><button id="writing-show-preview" type="button" aria-pressed="true">阅读预览</button><button id="writing-show-markdown" type="button" aria-pressed="false">编辑 Markdown</button></div><button id="writing-save" type="button" class="explore-text-button">保存草稿</button></div>
+        <div id="writing-preview" class="prose writing-preview"><p class="explore-help">确认提纲后，点击“按提纲撰写正文”。</p></div>
+        <label class="sr-only" for="writing-body">Markdown 正文</label><textarea id="writing-body" class="writing-markdown" maxlength="60000" rows="24" spellcheck="false" hidden></textarea>
+        <div id="writing-revision" class="writing-revision"><label for="writing-instruction">继续修改文稿</label><textarea id="writing-instruction" maxlength="2000" rows="2" placeholder="例如：保留结论，补充一个带边界条件的代码示例。"></textarea><button id="writing-revise" type="button" class="explore-text-button">按要求修改 ↗</button></div>
+        <div class="writing-footer-actions"><button id="writing-export" type="button" class="button button-light">导出 Markdown ↓</button>{% if artifacts_enabled %}<a id="writing-review-note" class="button button-light" hidden>审阅并更新已有笔记</a>{% endif %}{% if user and user.role == 'admin' %}<button id="writing-publish" type="button" class="button">预览并存入笔记库</button>{% endif %}<a id="writing-saved-note" class="button" hidden>打开已保存的笔记 ↗</a></div>
+        <p class="explore-help">文稿由 AI 根据资料生成，请核对引用和待核实内容。{% if user and user.role != 'admin' %}{% if artifacts_enabled %}可审阅更新有编辑权限的笔记；新建笔记仍需管理员权限。{% else %}当前账户可以生成与导出文稿，存入笔记库需要管理员权限。{% endif %}{% endif %}</p>
+      </div>
+      <section id="writing-progress" class="writing-progress" hidden aria-label="生成进度"><p id="writing-progress-status" class="explore-pending" role="status">正在生成…</p><pre id="writing-stream" aria-label="正在生成的 Markdown 草稿"></pre><button id="writing-stop" type="button" class="explore-text-button">停止生成</button><p class="explore-help">生成结束后核对引用并保存。中途失败保留上一版文稿。</p></section>
+    </section>
+  </div>
+  {% if user and user.role == 'admin' %}<dialog id="writing-publish-dialog" class="writing-dialog"><form id="writing-publish-form"><h2>确认存入笔记库</h2><p>请核对右侧完整成稿，再确认保存路径与可见范围。</p><p id="writing-confirm-summary"></p><label for="writing-path">新笔记路径</label><input id="writing-path" maxlength="500" required placeholder="Frontend/知识求索/文档标题.md"><label for="writing-visibility">可见范围</label><select id="writing-visibility"><option value="private">私密</option><option value="public">公开（仅 Backend / Frontend）</option></select><small>新建笔记，不替换同名内容。保存后可在笔记页继续编辑。</small><div class="writing-footer-actions"><button id="writing-cancel-publish" type="button" class="button button-light">返回修改</button><button id="writing-confirm-publish" class="button" type="submit">确认保存到笔记库</button></div></form></dialog>{% endif %}
+</div>
+{% endblock %}

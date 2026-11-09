@@ -1,0 +1,12 @@
+{% macro pdf_source(pdf) %}
+<section class="pdf-source" aria-label="{{ ui('PDF 原文件') }}">
+  <div class="pdf-source-toolbar">
+    <span><strong>{{ ui('PDF 笔记') if pdf.note_format == 'pdf' else ui('来源 PDF') }}</strong> · {{ pdf.filename }} · {{ '%.1f'|format(pdf.size / 1048576) }} MB</span>
+    <div><a href="{{ pdf.url }}" target="_blank" rel="noopener">打开 PDF</a><a href="{{ pdf.download_url }}">下载 PDF</a>{% if user %}<form method="post" action="/n/{{ note.id }}/pdf/convert"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="button button-light" type="submit">提取文字 / 转 Markdown</button></form>{% endif %}</div>
+  </div>
+  {% if pdf.note_format == 'pdf' %}
+  <p class="pdf-source-help">若浏览器无法内嵌阅读，请打开或下载 PDF。</p>
+  <iframe title="{{ ui('PDF 原文阅读') }}" src="{{ pdf.url }}" loading="lazy"></iframe>
+  {% endif %}
+</section>
+{% endmacro %}

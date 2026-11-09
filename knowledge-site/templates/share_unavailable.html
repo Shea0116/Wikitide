@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}无法打开分享{% endblock %}
+{% block content %}
+<div class="page-head"><p class="eyebrow">链接分享</p><h1>{{ '当前账户没有访问权限' if forbidden else '分享已失效或不存在' }}</h1><p>{{ '请使用获授权的账户登录，或联系分享者调整权限。' if forbidden else '链接可能已被撤销，请联系分享者获取新的链接。' }}</p>{% if forbidden %}<a class="button" href="{{ login_next }}">切换登录账户</a>{% endif %}</div>
+{% endblock %}

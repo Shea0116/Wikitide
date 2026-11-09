@@ -1,0 +1,25 @@
+services:
+  knowledge:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8766:8000"
+    environment:
+      KB_DB_PATH: /data/site.db
+      KB_CONTENT_ROOT: /app/content
+      KB_COOKIE_SECURE: ${KB_COOKIE_SECURE:-0}
+      KB_ALLOWED_HOSTS: ${KB_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      KB_SYNC_TOKEN_SHA256: ${KB_SYNC_TOKEN_SHA256:-}
+    volumes:
+      - wikitide-data:/data
+      - ./content:/app/content:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  wikitide-data:

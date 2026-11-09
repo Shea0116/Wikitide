@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}管理员平台{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin/app.css?v=20261020a">
+<script type="module" src="/static/admin/app.js?v=20261102a"></script>
+{% endblock %}
+{% block body_class %}admin-platform-page{% endblock %}
+{% block content %}
+<div id="admin-root" data-csrf="{{ csrf }}"><p role="status">正在打开管理员平台…</p></div>
+<noscript>管理员平台需要 JavaScript。<a href="/admin/permissions">打开账户与笔记权限管理</a>。</noscript>
+{% endblock %}

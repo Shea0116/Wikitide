@@ -1,0 +1,75 @@
+/* Shared token palette for Pygments previews and CodeMirror editing. */
+.edit-page {
+  --syntax-comment: #687381;
+  --syntax-keyword: #7539bd;
+  --syntax-type: #187d96;
+  --syntax-string: #527c15;
+  --syntax-tag: #18832d;
+  --syntax-attribute: #7539bd;
+  --syntax-function: #2761ad;
+  --syntax-number: #966600;
+  --syntax-constant: #a23b72;
+  --syntax-punctuation: #374151;
+  --syntax-operator: #a34559;
+}
+html[data-theme="dark"] .edit-page {
+  --syntax-comment: #8b949e;
+  --syntax-keyword: #c49aff;
+  --syntax-type: #70cde0;
+  --syntax-string: #a8d56d;
+  --syntax-tag: #7ee092;
+  --syntax-attribute: #d2a8ff;
+  --syntax-function: #82b7f4;
+  --syntax-number: #edbc70;
+  --syntax-constant: #f0a2c6;
+  --syntax-punctuation: #cdd4de;
+  --syntax-operator: #ed92a7;
+}
+.edit-page :is(.live-editor, .preview-panel) .syntax-c,
+.edit-page :is(.live-editor, .preview-panel) .syntax-ch,
+.edit-page :is(.live-editor, .preview-panel) .syntax-cm,
+.edit-page :is(.live-editor, .preview-panel) .syntax-c1,
+.edit-page :is(.live-editor, .preview-panel) .syntax-cs { color: var(--syntax-comment); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-k,
+.edit-page :is(.live-editor, .preview-panel) .syntax-kc,
+.edit-page :is(.live-editor, .preview-panel) .syntax-kd,
+.edit-page :is(.live-editor, .preview-panel) .syntax-kn,
+.edit-page :is(.live-editor, .preview-panel) .syntax-kp,
+.edit-page :is(.live-editor, .preview-panel) .syntax-kr { color: var(--syntax-keyword); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-kt,
+.edit-page :is(.live-editor, .preview-panel) .syntax-nb,
+.edit-page :is(.live-editor, .preview-panel) .syntax-bp,
+.edit-page :is(.live-editor, .preview-panel) .syntax-nc,
+.edit-page :is(.live-editor, .preview-panel) .syntax-cp,
+.edit-page :is(.live-editor, .preview-panel) .syntax-cpf { color: var(--syntax-type); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-s,
+.edit-page :is(.live-editor, .preview-panel) .syntax-sa,
+.edit-page :is(.live-editor, .preview-panel) .syntax-sb,
+.edit-page :is(.live-editor, .preview-panel) .syntax-sc,
+.edit-page :is(.live-editor, .preview-panel) .syntax-dl,
+.edit-page :is(.live-editor, .preview-panel) .syntax-sd,
+.edit-page :is(.live-editor, .preview-panel) .syntax-s2,
+.edit-page :is(.live-editor, .preview-panel) .syntax-sh,
+.edit-page :is(.live-editor, .preview-panel) .syntax-si,
+.edit-page :is(.live-editor, .preview-panel) .syntax-sr,
+.edit-page :is(.live-editor, .preview-panel) .syntax-s1,
+.edit-page :is(.live-editor, .preview-panel) .syntax-ss { color: var(--syntax-string); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-se { color: var(--syntax-constant); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-nt { color: var(--syntax-tag); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-na { color: var(--syntax-attribute); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-nf,
+.edit-page :is(.live-editor, .preview-panel) .syntax-fm,
+.edit-page :is(.live-editor, .preview-panel) .syntax-nn { color: var(--syntax-function); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-m,
+.edit-page :is(.live-editor, .preview-panel) .syntax-mb,
+.edit-page :is(.live-editor, .preview-panel) .syntax-mf,
+.edit-page :is(.live-editor, .preview-panel) .syntax-mh,
+.edit-page :is(.live-editor, .preview-panel) .syntax-mi,
+.edit-page :is(.live-editor, .preview-panel) .syntax-il,
+.edit-page :is(.live-editor, .preview-panel) .syntax-mo { color: var(--syntax-number); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-no,
+.edit-page :is(.live-editor, .preview-panel) .syntax-nd,
+.edit-page :is(.live-editor, .preview-panel) .syntax-ne { color: var(--syntax-constant); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-p { color: var(--syntax-punctuation); }
+.edit-page :is(.live-editor, .preview-panel) .syntax-o,
+.edit-page :is(.live-editor, .preview-panel) .syntax-ow { color: var(--syntax-operator); }

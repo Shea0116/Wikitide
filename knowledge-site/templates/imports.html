@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}资料导入工作台{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="/static/imports/app.css?v=20261023a"><script type="module" src="/static/imports/app.js?v=20261102a"></script>{% endblock %}
+{% block content %}<div id="imports-root" data-csrf="{{ csrf }}"><p role="status">正在打开资料导入工作台…</p></div><noscript>资料导入需要 JavaScript；原有笔记阅读仍可使用。</noscript>{% endblock %}

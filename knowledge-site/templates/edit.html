@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}编辑 {{ note.title }}{% endblock %}
+{% block body_class %}edit-page{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/editor/editor.css?v=20261023a">
+<script type="module" src="/static/editor/editor.js?v=20261102a"></script>
+<script src="/static/cloud-drafts.js?v=20261102a" defer></script>
+{% endblock %}
+{% block content %}
+<div class="page-head editor-page-head"><p class="eyebrow">编辑笔记</p><h1>{{ note.title }}</h1><p>保存后排队同步到本地文件；两端同时修改时会提示冲突。</p></div>
+{% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+{% if server_body is defined %}<details class="version-panel" open><summary>最新网站正文（请对照合并）</summary><pre>{{ server_body }}</pre><label class="checkbox"><input type="checkbox" data-conflict-reviewed>我已对照最新正文检查修改</label></details>{% endif %}
+<div class="draft-recovery" hidden><p>发现与最新正文版本不同的草稿，编辑已暂停。<span data-draft-description></span></p><button type="button" class="button button-light" data-restore-draft>恢复草稿</button> <button type="button" class="button button-light" data-discard-draft>丢弃草稿</button></div>
+<form class="edit-form" action="/n/{{ note.id }}/edit" method="post" data-editor data-style-nonce="{{ request.state.editor_style_nonce }}" data-note-id="{{ note.id }}" data-base-sha="{{ note.body_sha }}" data-server-rejected="{{ '1' if error else '' }}">
+  <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="base_sha" value="{{ note.body_sha }}">
+  <details class="version-panel" data-cloud-drafts><summary>跨设备草稿与三方对照</summary><div class="filter-form"><button type="button" class="button button-light" data-cloud-load>读取云草稿</button><button type="button" class="button button-light" data-cloud-save>保存云草稿</button><button type="button" class="button button-light" data-cloud-restore disabled>恢复已读取的云草稿</button><button type="button" class="button button-light" data-cloud-delete>删除云草稿</button><button type="button" class="button button-light" data-cloud-compare>三方对照</button></div><p role="status">正在读取云草稿…</p><div class="three-way" data-three-way></div></details>
+  <label class="sr-only" for="editor">Markdown 正文</label>
+  <div class="editor-toolbar"><div class="editor-modes" role="group" aria-label="编辑模式" hidden><button type="button" data-editor-mode="live" aria-pressed="true">实时预览</button><button type="button" data-editor-mode="source" aria-pressed="false">Markdown 源码</button></div><span data-draft-status role="status">未修改</span><button type="button" class="button button-light" data-preview-toggle aria-expanded="false">阅读预览</button><button type="button" class="button button-light" data-download-draft>下载草稿</button></div>
+  <div class="heading-tools" data-heading-tools hidden role="group" aria-label="章节折叠"><label for="fold-level">标题层级</label><select id="fold-level" data-fold-level>{% for level in range(1, 7) %}<option value="{{ level }}" {{ 'selected' if level == 2 else '' }}>H{{ level }}</option>{% endfor %}</select><button type="button" class="button button-light" data-fold-headings>折叠该级章节</button><button type="button" class="button button-light" data-unfold-headings>全部展开</button><span data-fold-status role="status" class="sr-only"></span></div>
+  <p class="editor-hint" data-live-hint hidden>点击正文即可编辑；标题左侧箭头可折叠章节及其子章节。折叠不改变正文。⌘ / Ctrl + Z 撤销。</p>
+  <p class="editor-render-status" data-editor-render-status role="status" hidden></p>
+  <div class="editor-columns"><textarea id="editor" name="body" spellcheck="false" required>{{ draft_body if draft_body is defined else note.body }}</textarea><section class="preview-panel prose" aria-label="Markdown 预览" hidden></section></div>
+  <div class="editor-footer" data-editor-footer hidden><span>Markdown · 原文保存</span><span data-editor-count></span></div>
+  <div class="form-actions"><button class="button" type="submit">保存修改</button><a class="button button-light" href="/n/{{ note.id }}">返回阅读</a><a href="/n/{{ note.id }}/history">版本历史</a></div>
+</form>
+{% if user.role == 'admin' %}<details class="version-panel"><summary>分类与摘要</summary><form class="stack-form" action="/n/{{ note.id }}/metadata" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="record_sha" value="{{ record_sha }}"><label>分类<input name="category" value="{{ note.category }}" maxlength="240" required></label><label>摘要<textarea name="summary" maxlength="2000">{{ note.summary }}</textarea></label><button class="button" type="submit">保存分类与摘要</button></form></details>{% endif %}
+{% endblock %}

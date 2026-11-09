@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}研究与反馈任务{% endblock %}
+{% block content %}
+<div class="page-head"><h1>研究与反馈任务</h1><p>查看当前账户的后台研究和作答反馈，继续尚未完成的任务。</p><a href="/explore">返回知识求索</a> · <a href="/learn">返回学习与复习</a></div>
+{% for task in tasks %}<section class="version-panel"><h2><a href="/agent/tasks/{{ task.id }}">{{ task.topic }}</a></h2><p>{{ ui('后台研究' if task.kind=='knowledge' else '参考反馈') }} · {{ ui({'queued':'等待执行','running':'执行中','waiting_user':'等待确认','succeeded':'已完成','failed':'执行失败','cancelled':'已取消'}.get(task.status,'等待执行')) }}</p>{% if task.result_available is defined and not task.result_available %}<p>资料或访问权限已变化，请重新创建任务。</p>{% endif %}</section>{% else %}<p class="empty">暂无研究与反馈任务。</p>{% endfor %}
+{% if next_cursor %}<a href="/agent/tasks?cursor={{ next_cursor }}">更早的任务</a>{% endif %}
+{% endblock %}

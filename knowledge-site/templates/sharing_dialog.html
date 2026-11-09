@@ -1,0 +1,17 @@
+<dialog class="share-dialog" data-share-dialog aria-labelledby="share-heading">
+  <div class="share-heading"><h2 id="share-heading">链接分享</h2><button class="button button-light" type="button" data-share-close aria-label="关闭分享设置">关闭</button></div>
+  <p class="share-target" data-share-title></p>
+  <p class="muted" data-share-scope></p>
+  <form data-share-form>
+    <fieldset><legend>链接访问范围</legend>
+      <label class="share-choice"><input type="radio" name="audience" value="restricted" checked><span><strong>仅指定账户</strong><small>对方登录后，按下方权限阅读或编辑。</small></span></label>
+      <label class="share-choice"><input type="radio" name="audience" value="link"><span><strong>获得链接的任何人可查看</strong><small>无需登录，只读。链接可能被转发，请确认分享范围。</small></span></label>
+    </fieldset>
+    <fieldset><legend>有效期</legend><label>到期方式<select name="expiry"><option value="keep">保留当前有效期</option><option value="none">长期有效</option><option value="1">1 天</option><option value="7">7 天</option><option value="custom">自定义时间</option></select></label><label>自定义到期时间<input name="expiry_time" type="datetime-local"></label><p data-share-expiry></p></fieldset>
+    <fieldset><legend>指定账户权限</legend><p class="muted">管理员始终可访问。编辑权限仅可授予编辑者账户。</p><div data-share-users></div></fieldset>
+    <p class="muted">关闭链接或移除账户后保存即可撤销本次授权；其他已有授权仍然有效。私人笔记不会因此加入公开目录或搜索。</p>
+    <div class="share-actions"><button class="button" type="submit" data-share-save>保存分享设置</button><button class="button button-light" type="button" data-share-revoke>撤销本次分享</button></div>
+  </form>
+  <div class="share-link" data-share-link hidden><label for="share-url">已保存的分享链接</label><div class="share-actions"><input id="share-url" type="text" readonly><button class="button button-light" type="button" data-share-copy>复制链接</button></div></div>
+  <p role="status" aria-live="polite" data-share-status></p>
+</dialog>

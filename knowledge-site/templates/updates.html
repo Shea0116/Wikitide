@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}更新说明{% endblock %}
+{% block content %}
+<div class="page-head"><p class="eyebrow">WIKITIDE / 新变化</p><h1>更新说明</h1><p>每次上线的新功能与体验改进，都记录在这里。</p></div>
+{% for release in releases %}<section class="release-history version-panel" aria-labelledby="release-{{ release.id }}"><p class="release-date">{{ release.date }} · {{ release.id }}</p><h2 id="release-{{ release.id }}">{{ ui(release.title) }}</h2><p>{{ ui(release.summary) }}</p><ul class="release-highlights">{% for item in release.highlights %}<li>{{ ui(item) }}</li>{% endfor %}</ul></section>{% endfor %}
+{% endblock %}

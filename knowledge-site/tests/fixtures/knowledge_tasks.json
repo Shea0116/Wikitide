@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "origin": "根据现有公开原始笔记人工编写的候选使用任务，尚未经过真实用户试用标注。",
+  "split_policy": "本批任务统一用于开发基线，独立验证集与保留测试集在后续扩充时按资料主题另行建立。",
+  "topic_splits": {"javascript": "development", "async": "development", "browser": "development", "performance": "development", "vue": "development"},
+  "flow_contracts": {
+    "reading": {"expected": ["回答当前困惑并定位原文依据", "区分笔记记录与示例", "由用户选择是否练习"], "failures": ["无依据扩展结论", "引用无法定位", "直接把用户自评当作独立作答证据"]},
+    "research": {"expected": ["检索各个问题维度的支持资料", "比较条件与差异", "说明资料缺口"], "failures": ["只覆盖一个问题维度", "混淆技术版本", "宣称未执行的实验已验证"]},
+    "draft": {"expected": ["生成带来源的补充草稿", "关联已有笔记", "审阅差异后提交"], "failures": ["覆盖原文而未确认", "缺少基准版本", "复述原文而未完成所需整理"]}
+  },
+  "cases": [
+    {"id": "read-01", "flow": "reading", "topic": "javascript", "question": "闭包中的变量为什么在外层函数返回后还能访问？用笔记里的闭包形成示例解释。", "evidence": [{"path": "Frontend/JS基础.md", "section_contains": "闭包的形成"}]},
+    {"id": "read-02", "flow": "reading", "topic": "javascript", "question": "暂时性死区 TDZ 是什么意思？为什么 let 声明之前不能读取变量？", "evidence": [{"path": "Frontend/JS基础.md", "section_contains": "暂时性死区"}]},
+    {"id": "read-03", "flow": "reading", "topic": "javascript", "question": "const 声明的对象为什么还能修改属性？说明 const 的注意点。", "evidence": [{"path": "Frontend/JS基础.md", "section_contains": "const 的注意点"}]},
+    {"id": "read-04", "flow": "reading", "topic": "async", "question": "Promise 从 pending 变成 fulfilled 后，再调用 reject 会怎样？解释状态流转规则。", "evidence": [{"path": "Frontend/Promise.md", "section_contains": "状态流转规则"}]},
+    {"id": "read-05", "flow": "reading", "topic": "async", "question": "Promise 的 then 返回什么？怎样把上一步的结果传到下一步？", "evidence": [{"path": "Frontend/Promise.md", "section_contains": ".then(onFulfilled"}]},
+    {"id": "read-06", "flow": "reading", "topic": "browser", "question": "DNS 解析的完整流程是什么？请按笔记梳理查找顺序。", "evidence": [{"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "DNS 解析的完整流程"}]},
+    {"id": "read-07", "flow": "reading", "topic": "browser", "question": "为什么协商缓存有 Last-Modified 还需要 ETag？分别有什么限制？", "evidence": [{"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "协商缓存为什么有"}]},
+    {"id": "read-08", "flow": "reading", "topic": "performance", "question": "图片为什么会导致 CLS？怎样预设图片尺寸避免布局偏移？", "evidence": [{"path": "Frontend/性能优化.md", "section_contains": "图片尺寸预设"}]},
+    {"id": "read-09", "flow": "reading", "topic": "performance", "question": "虚拟列表怎样减少长列表渲染开销？请结合原文解释。", "evidence": [{"path": "Frontend/性能优化.md", "section_contains": "虚拟列表"}]},
+    {"id": "read-10", "flow": "reading", "topic": "vue", "question": "Vue 事件修饰符有什么作用？请解释 stop 和 prevent 的使用。", "evidence": [{"path": "Frontend/Vue 基础.md", "section_contains": "事件修饰符"}]},
+    {"id": "research-01", "flow": "research", "topic": "javascript", "question": "对比 JavaScript 浅拷贝和深拷贝，解释修改嵌套对象时的差异。", "evidence": [{"path": "Frontend/JS基础.md", "section_contains": "浅拷贝"}, {"path": "Frontend/JS基础.md", "section_contains": "深拷贝"}]},
+    {"id": "research-02", "flow": "research", "topic": "javascript", "question": "结合闭包与性能优化笔记，分析不再需要的对象为什么还被保留，以及如何避免内存泄漏。", "evidence": [{"path": "Frontend/JS基础.md", "section_contains": "闭包的特性"}, {"path": "Frontend/性能优化.md", "section_contains": "避免内存泄漏"}]},
+    {"id": "research-03", "flow": "research", "topic": "async", "question": "比较 Promise.all 和 Promise.allSettled 在部分请求失败时的行为和使用条件。", "evidence": [{"path": "Frontend/Promise.md", "section_contains": "Promise.all(iterable)"}, {"path": "Frontend/Promise.md", "section_contains": "Promise.allSettled(iterable)"}]},
+    {"id": "research-04", "flow": "research", "topic": "async", "question": "比较 Promise.race 和 Promise.any，说明最先完成与最先成功的区别。", "evidence": [{"path": "Frontend/Promise.md", "section_contains": "Promise.race(iterable)"}, {"path": "Frontend/Promise.md", "section_contains": "Promise.any(iterable)"}]},
+    {"id": "research-05", "flow": "research", "topic": "async", "question": "对比浏览器与 Node.js 的事件循环，解释 process.nextTick 和 Promise 微任务的关系并说明版本范围。", "evidence": [{"path": "Frontend/Promise.md", "section_contains": "Node.js 与浏览器事件循环的区别"}, {"path": "Frontend/Promise.md", "section_contains": "process.nextTick"}]},
+    {"id": "research-06", "flow": "research", "topic": "browser", "question": "结合浏览器渲染与性能优化笔记，比较回流 Reflow 和重绘 Repaint，并给出减少回流的建议。", "evidence": [{"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "回流（Reflow）与重绘"}, {"path": "Frontend/性能优化.md", "section_contains": "减少回流"}]},
+    {"id": "research-07", "flow": "research", "topic": "browser", "question": "HTTP/1.1、HTTP/2、HTTP/3 各自解决了什么问题？依据现有笔记比较并注明资料范围。", "evidence": [{"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "HTTP/1.1 的问题"}, {"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "HTTP/2 的核心改进"}, {"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "HTTP/3"}]},
+    {"id": "research-08", "flow": "research", "topic": "performance", "question": "比较 Preload 和 Prefetch，在当前页面和未来页面资源加载上如何选择？", "evidence": [{"path": "Frontend/性能优化.md", "section_contains": "预加载"}]},
+    {"id": "research-09", "flow": "research", "topic": "performance", "question": "结合 Promise 微任务与 requestAnimationFrame 笔记，解释任务调度与页面渲染的联系。", "evidence": [{"path": "Frontend/Promise.md", "section_contains": "宏任务与微任务"}, {"path": "Frontend/性能优化.md", "section_contains": "requestAnimationFrame"}]},
+    {"id": "research-10", "flow": "research", "topic": "vue", "question": "结合 Vue 基础和性能优化笔记，整理组件化状态维护与框架层优化的适用条件。", "evidence": [{"path": "Frontend/Vue 基础.md", "section_contains": "组件传参与状态维护"}, {"path": "Frontend/性能优化.md", "section_contains": "框架层优化"}]},
+    {"id": "draft-01", "flow": "draft", "topic": "javascript", "question": "根据现有笔记，把 typeof、instanceof、Object.prototype.toString 整理成类型判断对照草稿，保留来源。", "evidence": [{"path": "Frontend/JS基础.md", "section_contains": "类型判断方法"}]},
+    {"id": "draft-02", "flow": "draft", "topic": "javascript", "question": "把 for 循环中的 var 与 let 示例整理成一道自测题草稿，答案和解释单独展示。", "evidence": [{"path": "Frontend/JS基础.md", "section_contains": "for 循环中的 var vs let"}]},
+    {"id": "draft-03", "flow": "draft", "topic": "async", "question": "把 async await 并行优化整理成笔记补充草稿，给出顺序等待与并行等待的对比。", "evidence": [{"path": "Frontend/Promise.md", "section_contains": "并行优化"}]},
+    {"id": "draft-04", "flow": "draft", "topic": "async", "question": "根据 Promise 常见坑，整理忘记 return 导致链式调用断裂的案例草稿，标出原文出处。", "evidence": [{"path": "Frontend/Promise.md", "section_contains": "忘记 return"}]},
+    {"id": "draft-05", "flow": "draft", "topic": "browser", "question": "把 TCP 三次握手与四次挥手整理成复习提纲草稿，分清建立和断开连接。", "evidence": [{"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "三次握手（建立连接）"}, {"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "四次挥手（断开连接）"}]},
+    {"id": "draft-06", "flow": "draft", "topic": "browser", "question": "根据 HTTP 请求与响应报文结构，整理一份有来源的对照表草稿。", "evidence": [{"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "HTTP 请求报文结构"}, {"path": "Frontend/浏览器渲染流程和性能.md", "section_contains": "HTTP 响应报文结构"}]},
+    {"id": "draft-07", "flow": "draft", "topic": "performance", "question": "把代码分割与 Tree Shaking 整理成构建优化笔记草稿，注明各自解决的问题。", "evidence": [{"path": "Frontend/性能优化.md", "section_contains": "代码分割"}, {"path": "Frontend/性能优化.md", "section_contains": "Tree Shaking"}]},
+    {"id": "draft-08", "flow": "draft", "topic": "performance", "question": "整理 Web Worker 处理 CPU 密集型任务的实践草稿，保留适用条件与来源。", "evidence": [{"path": "Frontend/性能优化.md", "section_contains": "Web Worker"}]},
+    {"id": "draft-09", "flow": "draft", "topic": "performance", "question": "结合 Lighthouse 和 Performance API 笔记，生成一次页面性能排查的操作清单草稿。", "evidence": [{"path": "Frontend/性能优化.md", "section_contains": "Lighthouse"}, {"path": "Frontend/性能优化.md", "section_contains": "Performance API"}]},
+    {"id": "draft-10", "flow": "draft", "topic": "vue", "question": "把 Vue 数据绑定与数据修饰符整理成复习卡片草稿，题目与答案分开。", "evidence": [{"path": "Frontend/Vue 基础.md", "section_contains": "基础绑定"}, {"path": "Frontend/Vue 基础.md", "section_contains": "数据修饰符"}]}
+  ]
+}

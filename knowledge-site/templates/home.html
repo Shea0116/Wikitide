@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}首页{% endblock %}
+{% block body_class %}home-page{% endblock %}
+{% block content %}
+<section class="intro" aria-labelledby="home-title">
+  <div class="hero-copy">
+    <p class="hero-kicker"><span class="kicker-line" aria-hidden="true"></span>A PERSONAL KNOWLEDGE LIBRARY</p>
+    <h1 id="home-title">让知识<span class="hero-line">有迹可循<span class="hero-dot">。</span></span></h1>
+    <p class="hero-description">把零散的灵感，整理成可以回来的地方。<br>在这里，阅读、连接，再发现。</p>
+    <div class="hero-actions"><a class="button hero-button" href="/browse">开始探索 <span class="button-icon-wrap" aria-hidden="true"><svg class="control-icon" viewBox="0 0 24 24" fill="none"><path d="M6 18 18 6M6 6h12v12"/></svg></span></a><a class="quiet-link" href="#recent">看看最近更新 <span aria-hidden="true">↓</span></a></div>
+  </div>
+  <div class="tide-art" aria-hidden="true">
+    <svg class="tide-svg" viewBox="0 0 460 460" fill="none">
+      <defs><linearGradient id="tide-gradient" x1="30" y1="0" x2="430" y2="440" gradientUnits="userSpaceOnUse"><stop stop-color="#b3a3df"/><stop offset="1" stop-color="#6652a7"/></linearGradient><clipPath id="tide-clip"><circle cx="230" cy="230" r="184"/></clipPath></defs>
+      <circle class="tide-halo" cx="230" cy="230" r="211"/><circle class="tide-orbit" cx="230" cy="230" r="184"/>
+      <g clip-path="url(#tide-clip)" stroke="url(#tide-gradient)" stroke-width="1.2" class="tide-lines">
+      {% for offset in range(0, 216, 9) %}<path d="M-30 {{ 115+offset }} C70 {{ 15+offset }},155 {{ 260+offset }},265 {{ 145+offset }} S430 {{ 50+offset }},510 {{ 125+offset }}"/>{% endfor %}
+      </g>
+      <circle cx="230" cy="19" r="3.5" class="tide-point"/><path d="M225 230h10m-5-5v10" class="tide-center"/>
+    </svg>
+    <span class="tide-caption">THOUGHTS IN FLOW <span>识 · 汐</span></span>
+  </div>
+  <div class="hero-bottom"><span>一座持续生长的知识库</span><span><b>{{ categories|sum(attribute='total') }}</b> 篇可见笔记 <span class="meta-divider">/</span> {{ categories|length }} 个方向</span></div>
+</section>
+{% if continue_reading %}<section class="section"><div class="section-heading"><h2>继续阅读</h2><a href="/library">我的阅读 ↗</a></div><div class="note-list">{% for note in continue_reading %}<a class="note-row" href="/n/{{ note.id }}?resume=1"><span><strong>{% if note.is_pdf %}<span class="privacy-tag">PDF</span> {% endif %}{{ note.title }}</strong><small>{{ note.category }}</small></span><span>继续阅读 ↗</span></a>{% endfor %}</div></section>{% endif %}
+<section class="section collections" aria-labelledby="collections-title">
+  <div class="section-heading"><div><span class="section-number">01 / EXPLORE</span><h2 id="collections-title">从一个方向开始</h2></div><a href="/browse">浏览知识地图 <span aria-hidden="true">↗</span></a></div>
+  <div class="collection-grid">
+    {% for item in categories %}
+    <a class="collection-card" href="/browse?category={{ item.path|urlencode }}">
+      <span class="collection-top"><span class="collection-number">{{ '%02d'|format(loop.index) }}</span><span class="collection-arrow" aria-hidden="true">↗</span></span>
+      <h3>{{ item.name }}</h3>
+      <p>{% if item.name == 'Backend' %}走进系统背后的逻辑{% elif item.name == 'Frontend' %}让想法成为可见的体验{% elif item.name == '知识导览' %}连起线索，找到学习路径{% else %}记录、整理与深入探索{% endif %}</p>
+      <span class="collection-bottom">{{ item.total }} 篇笔记 <span>打开目录 →</span></span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+<section class="section recent-section" id="recent" aria-labelledby="recent-title">
+  <div class="section-heading"><div><span class="section-number">02 / LATEST NOTES</span><h2 id="recent-title">最近更新</h2></div><a href="/browse">全部笔记 <span aria-hidden="true">↗</span></a></div>
+  <div class="note-list">
+    {% for note in recent[:6] %}<a class="note-row" href="/n/{{ note.id }}"><span class="note-index" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span><span class="note-text"><small>{{ note.category }}</small><strong>{% if note.is_pdf %}<span class="privacy-tag">PDF</span> {% endif %}{{ note.title }}</strong></span><span class="arrow" aria-hidden="true">↗</span></a>{% else %}<p class="empty">暂无笔记。</p>{% endfor %}
+  </div>
+</section>
+{% if guides %}
+<section class="section guide-section" aria-labelledby="guides-title">
+  <div class="section-heading"><div><span class="section-number">03 / FIND YOUR WAY</span><h2 id="guides-title">知识导览</h2></div><a href="/browse?category={{ '知识导览'|urlencode }}">查看全部 <span aria-hidden="true">↗</span></a></div>
+  <div class="guide-grid">
+    {% set priority_guides = guides|selectattr('title', 'in', ['主题导航', '学习路线', '全栈路线'])|list %}
+    {% for note in (priority_guides or guides)[:3] %}<a class="guide-card" href="/n/{{ note.id }}"><span class="guide-icon" aria-hidden="true">↗</span><strong>{% if note.is_pdf %}<span class="privacy-tag">PDF</span> {% endif %}{{ note.title }}</strong><span>{{ note.summary }}</span></a>{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

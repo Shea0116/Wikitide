@@ -1,0 +1,118 @@
+/* Wikitide: a quiet editorial library, with a tide drawn from its own identity. */
+:root{--design-bg:#f6f3fc;--design-ink:#292439;--design-muted:#6b647a;--design-accent:#7057a8;--design-line:#ddd6e9;--design-surface:#fff;--ease:cubic-bezier(.2,.7,.2,1)}
+html{scroll-padding-top:112px}
+body{background:var(--design-bg);color:var(--design-ink);-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+::selection{background:#ded2fa;color:#322747}
+a,button,input,summary{touch-action:manipulation}
+a,button{transition:color .2s,background-color .2s,border-color .2s,transform .3s var(--ease)}
+:focus-visible{outline:2px solid #8b6ec3;outline-offset:5px}
+.topbar{height:88px;padding-inline:clamp(20px,3.5vw,64px);gap:32px;background:rgba(255,255,255,.93);backdrop-filter:blur(16px);box-shadow:none;border-bottom:1px solid var(--design-line)}
+.brand-logo{width:174px;max-height:66px}
+.searchbar{max-width:420px;align-items:center;background:transparent;border:0;border-bottom:1px solid var(--design-line);border-radius:0;overflow:visible;gap:10px}
+.search-icon{width:18px;height:18px;flex:none;stroke:var(--design-muted);stroke-width:1.5}
+.searchbar input:not([type=checkbox]){border:0;background:transparent;padding:12px 0;box-shadow:none;font-size:13px;border-radius:0;color:var(--design-ink)}
+.searchbar input::placeholder{color:var(--design-muted)}
+.searchbar:focus-within{outline:0;border-color:var(--design-accent)}
+.searchbar input:focus{outline:0}
+.searchbar button{min-width:52px;min-height:44px;padding:0 5px;background:transparent;color:var(--design-accent);font-size:19px}
+.searchbar button:hover{background:transparent;color:var(--design-ink)}
+.search-shortcut{font:11px ui-monospace,monospace;border:1px solid var(--design-line);border-radius:4px;padding:0 6px;color:var(--design-muted)}
+.account{gap:20px}.theme-toggle{background:transparent;border:0;padding:10px 0;color:var(--design-muted);font-size:12px;min-height:44px;gap:8px}.theme-toggle:hover{background:transparent;color:var(--design-accent)}
+.account-menu { position: relative; flex: none; }
+.account .account-name { display: flex; align-items: center; max-width: 180px; min-height: 44px; padding: 7px 16px; border: 1px solid #746d6112; border-radius: 14px; background: var(--design-surface); color: var(--design-ink); box-shadow: 0 2px 5px #28251f0c; font: 700 18px/1.4 "Wikitide Kai",serif; cursor: pointer; list-style: none; }
+.account-name::-webkit-details-marker { display: none; }
+.account-username { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-name:hover, .account-menu[open] .account-name { border-color: var(--design-line); }
+.account-dropdown { position: absolute; top: calc(100% + 12px); right: 0; z-index: 30; display: flex; flex-direction: column; width: 160px; padding: 6px; border: 1px solid #746d6112; border-radius: 10px; background: var(--design-surface); color: var(--design-ink); box-shadow: 0 6px 22px #28251f1f; }
+.account-dropdown::before { content: ""; position: absolute; top: -6px; right: 24px; width: 10px; height: 10px; border-top: 1px solid #746d6112; border-left: 1px solid #746d6112; background: var(--design-surface); transform: rotate(45deg); }
+.account-dropdown a, .account-dropdown button { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 9px 10px; border: 0; border-radius: 6px; background: transparent; color: inherit; font: 14px/1.4 "Wikitide Kai",serif; text-align: left; white-space: nowrap; text-decoration: none; cursor: pointer; }
+.account-dropdown a:hover, .account-dropdown button:hover { background: var(--control-bg); text-decoration: none; }
+.account-dropdown .control-icon { width: 16px; height: 16px; }
+.account-dropdown .account-logout { color: #d84a44; }
+html[data-theme="dark"] .account-dropdown .account-logout { color: #ff8f83; }
+@media (max-width: 820px) {
+  .account-dropdown { right: auto; left: 0; }
+  .account-dropdown::before { right: auto; left: 24px; }
+}
+.theme-icon{width:19px;text-align:center}.login-link{display:flex;align-items:center;gap:14px;min-height:44px}.login-link:hover{text-decoration:none}.login-link span{font:16px sans-serif}
+.shell{max-width:1600px;grid-template-columns:220px minmax(0,1fr)}
+.sidebar{padding:54px 22px;background:transparent;border-color:var(--design-line)}
+.sidebar-head{margin:0 12px 26px;color:var(--design-ink);font:23px/1.4 "Wikitide Kai","Kaiti SC",serif;letter-spacing:0}
+.sidebar-caption{display:block;margin-bottom:12px;font:9px/1.5 ui-monospace,monospace;letter-spacing:.16em;color:var(--design-muted)}
+.sidebar-link{font-size:13px;padding:13px 12px;margin-bottom:5px;border-radius:6px;color:var(--design-muted);min-height:44px}
+.sidebar-link:hover,.sidebar-link.is-active{background:#e9e1f5;color:#57427f}
+.sidebar-link .count,.nav-arrow{font:11px ui-monospace,monospace;color:var(--design-muted)}
+.content{padding:54px clamp(28px,4.5vw,72px) 100px}
+.home-page .content{padding-top:0}
+.home-page .intro{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;position:relative;isolation:isolate;min-height:570px;padding:54px 0 0;background:none;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.home-page .intro:after{display:none}
+.hero-copy{position:relative;z-index:1;align-self:center;padding-bottom:38px;animation:arrival .8s var(--ease) both}
+.hero-kicker{display:flex;align-items:center;gap:12px;font:9px/1.5 ui-monospace,monospace;letter-spacing:.17em;color:var(--design-muted);margin:0 0 30px;white-space:nowrap}
+.kicker-line{width:29px;height:1px;background:#9d89b9;flex:none}
+.home-page .intro h1{color:var(--design-ink);font:400 clamp(44px,4.7vw,76px)/1.28 "Songti SC","STSong",Georgia,serif;letter-spacing:-.055em;margin:0 0 25px;max-width:none}
+.hero-line{display:block}.hero-dot{color:var(--design-accent)}
+.home-page .intro .hero-description{color:var(--design-muted);font-size:14px;line-height:1.9;margin:0 0 28px;max-width:450px}
+.hero-actions{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.hero-button{background:var(--design-accent);border-color:var(--design-accent);border-radius:5px;gap:35px;padding:13px 20px;font:19px/1.4 "Wikitide Kai",serif;font-weight:400;min-height:50px;box-shadow:0 4px 14px #7057a814}
+.hero-button span{font:20px sans-serif}.hero-button:hover{background:#584082;transform:translateY(-2px)}
+.quiet-link{color:var(--design-muted);font-size:12px;padding:12px 0;display:flex;gap:14px;align-items:center}.quiet-link:hover{text-decoration:none;color:var(--design-accent)}
+.tide-art{position:relative;align-self:center;min-width:0;padding-bottom:45px;animation:arrival 1.2s var(--ease) both}
+.tide-svg{width:100%;height:auto;display:block;overflow:visible}.tide-halo{stroke:#ded5ed;stroke-dasharray:1 7}.tide-orbit{stroke:#cbbddf;stroke-width:.75}.tide-point{fill:#8c70b5}.tide-center{stroke:#a38dbf;stroke-width:.6}.tide-lines{transform-origin:center;animation:tide-drift 12s ease-in-out infinite alternate}
+.tide-caption{display:flex;justify-content:space-between;gap:12px;font:9px ui-monospace,monospace;letter-spacing:.15em;color:var(--design-muted);margin:8px 12% 0}.tide-caption span{font:14px "Wikitide Kai",serif;letter-spacing:.1em}
+.hero-bottom{grid-column:1/-1;align-self:end;display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--design-line);padding:24px 0 23px;font-size:11px;color:var(--design-muted)}
+.hero-bottom b{font:15px ui-monospace,monospace;color:var(--design-accent)}.meta-divider{margin:0 12px;color:#b8adc9}
+.home-page .section{margin-top:56px}.section-heading{align-items:flex-end;margin-bottom:23px}.section-number{display:block;font:9px/1.5 ui-monospace,monospace;letter-spacing:.14em;color:var(--design-muted);margin-bottom:10px}
+.home-page .section-heading h2{font-size:29px;font-weight:400;color:var(--design-ink)}.section-heading>a{font-size:12px;font-weight:400;color:var(--design-muted);padding-block:10px}.section-heading>a span{margin-left:9px}.section-heading>a:hover{color:var(--design-accent);text-decoration:none}
+.collection-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.collection-card{display:flex;flex-direction:column;min-width:0;min-height:225px;padding:24px 25px;border:1px solid var(--design-line);border-radius:7px;background:rgba(255,255,255,.45);color:var(--design-ink);position:relative;overflow:hidden}
+.collection-card:hover{background:var(--design-surface);text-decoration:none;transform:translateY(-4px);border-color:#b9a5d3}
+.collection-top{display:flex;justify-content:space-between;align-items:center}.collection-number{font:11px ui-monospace,monospace;color:var(--design-muted)}.collection-arrow{font:23px sans-serif;color:#8c77a9;transition:transform .3s var(--ease)}.collection-card:hover .collection-arrow{transform:translate(3px,-3px)}
+.collection-card h3{font:400 29px/1.3 "Wikitide Kai",Georgia,serif;margin:23px 0 10px;color:var(--design-ink);overflow-wrap:anywhere}
+.collection-card p{font-size:12px;color:var(--design-muted);margin:0 0 24px}.collection-bottom{display:flex;justify-content:space-between;gap:12px;font-size:10px;color:var(--design-muted);border-top:1px solid var(--design-line);padding-top:16px;margin-top:auto}.collection-bottom span{color:var(--design-accent)}
+.home-page .note-list{border:0;border-top:1px solid var(--design-line);border-bottom:1px solid var(--design-line);border-radius:0;background:transparent;box-shadow:none}
+.home-page .note-row{padding:23px 5px;gap:26px;border-bottom:1px solid var(--design-line);color:var(--design-ink)}.home-page .note-row:last-child{border-bottom:0}.home-page .note-row:hover{background:#eee7f8}
+.note-index{font:11px ui-monospace,monospace;color:var(--design-muted);width:24px;flex:none;align-self:center}.note-text{flex:1;min-width:0}
+.home-page .note-row small{margin:0 0 7px;font-size:10px;letter-spacing:.025em;color:var(--design-muted)}.home-page .note-row strong{font-size:16px;font-weight:500;line-height:1.5}.home-page .note-row .arrow{font-size:23px;padding:0 14px;color:var(--design-accent);transition:transform .25s var(--ease)}.note-row:hover .arrow{transform:translate(3px,-3px)}
+.home-page .guide-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.home-page .guide-card{padding:22px;background:transparent;border:0;border-left:1px solid var(--design-line);border-radius:0;box-shadow:none;gap:9px;min-width:0}.home-page .guide-card:hover{transform:translateY(-3px);background:#eee7f8}.home-page .guide-icon{background:transparent;justify-content:start;margin:0;font-size:23px;color:var(--design-accent)}.home-page .guide-card strong{font-size:23px;color:var(--design-ink)}.home-page .guide-card span:last-child{font-size:12px;color:var(--design-muted);line-height:1.8}
+.page-head h1{font-weight:400;letter-spacing:-.025em}.directory-tree{padding:22px 26px;box-shadow:none;border-color:var(--design-line);border-radius:7px}.directory-tree summary,.tree-leaf{min-height:44px;display:list-item;padding-block:10px}.tree-leaf{display:block}.tree-count{color:var(--design-muted)}.directory-title{color:var(--design-muted)}.tree-view-all{padding:9px 0}
+.form-wrap,.admin-section,.permission-form{box-shadow:none;border-radius:9px}.form-wrap{max-width:480px;padding:40px}.stack-form input{min-height:48px}.button{min-height:44px}
+.footer{display:grid;grid-template-columns:1fr auto;gap:16px;text-align:left;padding:35px clamp(24px,5vw,80px);border-color:var(--design-line);color:var(--design-muted);background:transparent}
+.footer-brand{font:24px "Wikitide Kai",serif;color:var(--design-ink);display:flex;align-items:baseline;gap:13px}.footer-brand span{font:10px ui-monospace,monospace;letter-spacing:.18em;color:var(--design-muted)}.footer p{margin:0;font:17px "Wikitide Kai",serif;grid-column:1;grid-row:2}.footer small{font-size:10px;max-width:700px;line-height:1.7;grid-column:1}.footer>a{grid-column:2;grid-row:1/3;align-self:center;font-size:12px;padding:12px 0;color:var(--design-muted)}.footer>a span{margin-left:16px}
+/* Reading tools stay outside the document's GitHub-style typography. */
+.reading-layout{max-width:1080px;margin-inline:auto}.reading-progress{position:fixed;inset:0 auto auto 0;height:2px;width:100%;background:#8a6bc1;transform:scaleX(0);transform-origin:left;z-index:30;pointer-events:none}
+.article-page .content{padding-top:43px}.article-page .article-top{font-size:12px;line-height:1.8}.article-top>a{min-width:0;overflow-wrap:anywhere}.article-page .article h1{font-size:clamp(27px,2.6vw,38px);line-height:1.4;letter-spacing:-.015em}.reading-meta{color:#727983;font-size:11px;margin:10px 0 24px}.article-page .article-summary{font-size:14px;line-height:1.8}
+.article-page .prose{line-height:1.8}.article-page .prose h1,.article-page .prose h2,.article-page .prose h3{scroll-margin-top:125px}.article-page .prose pre{position:relative;padding-top:42px;tab-size:4}.code-copy{position:absolute;right:9px;top:7px;font:11px/1.5 -apple-system,sans-serif;color:#59636e;border:1px solid #d1d9e0;border-radius:5px;background:#fff;padding:5px 10px;min-height:28px}.code-copy:hover{background:#eef1f5}.code-copy:focus-visible{outline-offset:2px}
+.reading-outline{position:sticky;top:130px;align-self:start;max-height:calc(100vh - 170px);overflow:auto;padding-left:22px;border-left:1px solid #d1d9e0}.outline-label{font:8px ui-monospace,monospace;letter-spacing:.12em;color:#727983}.reading-outline h2{font:20px "Wikitide Kai",serif;margin:12px 0 18px}.reading-outline nav{display:flex;flex-direction:column;gap:3px}.reading-outline nav a{font-size:11px;color:#727983;padding:7px 0;line-height:1.6;overflow-wrap:anywhere}.reading-outline nav a.level-3{padding-left:12px;font-size:10px}.reading-outline nav a[aria-current="location"]{color:#7057a8}.outline-top{display:block;font-size:10px;margin-top:25px;padding:8px 0;color:#727983}
+html[data-theme="dark"]{--design-bg:#15131d;--design-ink:#eee8f5;--design-muted:#aaa0ba;--design-accent:#c0a4ed;--design-line:#393040;--design-surface:#221b2d}
+html[data-theme="dark"] body{background:var(--design-bg);color:var(--design-ink)}
+html[data-theme="dark"] .topbar{background:rgba(21,19,29,.94);border-color:var(--design-line)}
+html[data-theme="dark"] .searchbar,html[data-theme="dark"] .searchbar button,html[data-theme="dark"] .theme-toggle{background:transparent;color:var(--design-muted)}
+html[data-theme="dark"] .sidebar{background:transparent;border-color:var(--design-line)}html[data-theme="dark"] .sidebar-link{color:var(--design-muted)}html[data-theme="dark"] .sidebar-link:hover,html[data-theme="dark"] .sidebar-link.is-active{background:#2c2339;color:var(--design-ink)}
+html[data-theme="dark"] .home-page .intro{background:transparent;border:0}html[data-theme="dark"] .home-page .intro h1{color:var(--design-ink)}html[data-theme="dark"] .home-page .intro .hero-description{color:var(--design-muted)}html[data-theme="dark"] .hero-button{background:#b29ad8;border-color:#b29ad8;color:#21172f}html[data-theme="dark"] .hero-button:hover{background:#c9b3eb}
+html[data-theme="dark"] .tide-halo{stroke:#49385b}html[data-theme="dark"] .tide-orbit{stroke:#6a5286}html[data-theme="dark"] .tide-lines{opacity:.9}
+html[data-theme="dark"] .collection-card{background:#1c1725;border-color:var(--design-line);color:var(--design-ink)}html[data-theme="dark"] .collection-card:hover{background:#292033;border-color:#80629f}
+html[data-theme="dark"] .home-page .note-list,html[data-theme="dark"] .home-page .guide-card{background:transparent;border-color:var(--design-line)}html[data-theme="dark"] .home-page .note-row{color:var(--design-ink);border-color:var(--design-line)}html[data-theme="dark"] .home-page .note-row:hover,html[data-theme="dark"] .home-page .guide-card:hover{background:#231c2d}
+html[data-theme="dark"] .footer{background:transparent;border-color:var(--design-line)}
+html[data-theme="dark"] .reading-meta,html[data-theme="dark"] .reading-outline nav a,html[data-theme="dark"] .outline-label,html[data-theme="dark"] .outline-top{color:#9198a1}html[data-theme="dark"] .reading-outline{border-color:#30363d}html[data-theme="dark"] .reading-outline nav a[aria-current="location"]{color:#c0a4ed}html[data-theme="dark"] .code-copy{background:#212830;border-color:#3d444d;color:#c9d1d9}html[data-theme="dark"] .code-copy:hover{background:#30363d}
+@media(min-width:1350px){.reading-layout{display:grid;max-width:1200px;grid-template-columns:minmax(0,1fr) 260px;gap:28px}.article-page .article{width:100%}}
+@media(max-width:1349px){.reading-layout{display:flex;flex-direction:column}.reading-outline{order:-1;position:static;max-height:none;border:1px solid #d1d9e0;border-radius:6px;padding:13px 16px;margin-bottom:25px}.reading-outline summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:25px}.reading-outline summary:after{content:"+";font:18px sans-serif}.reading-outline details[open] summary:after{content:"−"}.reading-outline .outline-label,.reading-outline .outline-top{display:none}.reading-outline .outline-title{margin:0;font-size:17px}.reading-outline nav{max-height:320px;overflow:auto;margin-top:12px}.article-page .article{margin:0;width:100%}}
+@media(max-width:1100px){.topbar{gap:22px}.shell{grid-template-columns:185px minmax(0,1fr)}.sidebar{padding-inline:14px}.content{padding-inline:35px}.home-page .intro{min-height:515px;grid-template-columns:1.2fr .8fr}.hero-kicker{font-size:8px;letter-spacing:.08em}.home-page .intro h1{font-size:57px}.hero-actions{gap:16px}.quiet-link{font-size:11px}.collection-grid{gap:12px;grid-template-columns:repeat(auto-fit,minmax(175px,1fr))}.collection-card{padding:21px 18px}.collection-bottom{gap:5px}.collection-bottom span{font-size:9px}}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{display:flex;padding:8px 22px;border-bottom:1px solid var(--design-line);gap:5px;scrollbar-width:none}.sidebar::-webkit-scrollbar{display:none}.sidebar-head{display:none}.sidebar-link{margin:0;padding:10px 14px;min-height:40px}.sidebar .count{display:inline;font-size:9px}.sidebar-link .nav-arrow{display:none}.content{padding-inline:36px}.home-page .intro{min-height:510px;grid-template-columns:1fr 1fr}.tide-art{max-width:390px}.hero-kicker{font-size:8px}.account{gap:14px}.searchbar{max-width:320px}.search-shortcut{display:none}.home-page .section{margin-top:44px}.article-page .content{padding-top:30px}}
+@media(max-width:650px){html{scroll-padding-top:170px}.topbar{height:auto;min-height:120px;display:grid;grid-template-columns:1fr auto;gap:4px 20px;padding:9px 20px}.brand-logo{width:148px;max-height:51px}.account{gap:16px}.theme-toggle [data-theme-label]{display:none}.searchbar{grid-column:1/-1;grid-row:2;max-width:none;gap:12px}.searchbar input:not([type=checkbox]){font-size:12px;padding:10px 0}.searchbar button{min-height:40px;font-size:19px}.account>a[href="/login"]{font-size:20px}.login-link{gap:10px}.sidebar{padding:7px 13px}.sidebar-link{font-size:12px;padding:9px 12px}.content{padding:30px 22px 65px}.home-page .intro{grid-template-columns:1fr;min-height:0;padding-top:35px}.hero-copy{padding-bottom:0}.hero-kicker{font-size:8px;letter-spacing:.10em;margin-bottom:24px}.home-page .intro h1{font-size:clamp(46px,12vw,64px);line-height:1.22;margin-bottom:19px}.home-page .intro .hero-description{font-size:13px;line-height:1.8;margin-bottom:22px}.hero-actions{gap:24px}.hero-button{font-size:19px;padding:11px 16px;gap:28px}.tide-art{width:220px;max-width:62%;justify-self:end;margin-top:-8px;padding-bottom:18px}.tide-caption{font-size:7px;margin-top:0;letter-spacing:.06em}.tide-caption span{font-size:12px}.hero-bottom{padding:17px 0;font-size:9px;gap:10px}.hero-bottom b{font-size:12px}.meta-divider{margin:0 4px}.home-page .section{margin-top:36px}.section-heading{gap:14px;margin-bottom:18px}.section-number{font-size:8px;margin-bottom:8px}.home-page .section-heading h2{font-size:25px}.section-heading>a{font-size:10px;white-space:nowrap}.collection-grid{grid-template-columns:1fr;gap:10px}.collection-card{min-height:0;padding:18px 20px;display:grid;grid-template-columns:1fr auto;column-gap:16px}.collection-top{grid-column:1/-1}.collection-card h3{font-size:26px;margin:10px 0 5px}.collection-card p{grid-column:1/-1;margin:0 0 16px;font-size:12px}.collection-bottom{grid-column:1/-1;font-size:10px;padding-top:12px}.collection-bottom span{font-size:10px}.home-page .note-row{padding:20px 0;gap:13px}.home-page .note-row strong{font-size:14px}.home-page .note-row small{font-size:9px}.note-index{width:18px;font-size:10px}.home-page .note-row .arrow{padding:0 2px;font-size:21px}.home-page .guide-grid{grid-template-columns:1fr;gap:12px}.home-page .guide-card{padding:13px 20px;min-height:0}.home-page .guide-card strong{font-size:22px}.footer{padding:28px 22px;gap:12px}.footer p{font-size:16px}.footer small{font-size:9px;grid-column:1/-1}.footer>a{font-size:10px}.footer-brand{font-size:22px;gap:9px}.footer-brand span{font-size:8px}.article-page .article h1{font-size:28px}.article-page .prose{font-size:15px}.article-page .article-top{flex-wrap:wrap;gap:10px}.article-page .article-actions{gap:7px}.article-page .article-top .button{font-size:11px;padding:7px 11px;min-height:36px}.article-page .prose h1,.article-page .prose h2,.article-page .prose h3{scroll-margin-top:185px}.form-wrap{padding:28px 23px}.page-head h1{font-size:31px}.directory-tree{padding:17px}.directory-tree ul ul{padding-left:12px;margin-left:7px}.admin-section,.permission-form{padding:20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.collection-card:hover,.guide-card:hover,.hero-button:hover{transform:none}}
+@keyframes arrival{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tide-drift{from{transform:translateY(-4px) rotate(-2deg)}to{transform:translateY(4px) rotate(2deg)}}
+
+/* Final optical and contrast corrections across the two color schemes. */
+.hero-kicker,.sidebar-caption,.section-number,.tide-caption{font-size:10px}
+.home-page .note-row small{font-size:12px}.collection-bottom,.collection-bottom span{font-size:11px}.footer small{font-size:11px}
+.reading-outline summary{list-style:none}.reading-outline summary::-webkit-details-marker{display:none}.outline-title{display:block;font:20px "Wikitide Kai",serif;margin:12px 0 18px}.reading-outline nav a{font-size:12px}.reading-outline nav a.level-3{font-size:11px}
+html[data-theme="dark"] .searchbar input:not([type=checkbox]){background:transparent;color:var(--design-ink)}
+html[data-theme="dark"] .theme-toggle:hover{background:transparent;color:var(--design-ink)}
+@media(max-width:1349px){.reading-outline{align-self:stretch;width:100%}}
+.article-page .reading-meta,.article-page .reading-outline nav a,.article-page .outline-label,.article-page .outline-top{color:#59636e}
+.article-page .reading-outline nav a[aria-current="location"]{color:#7057a8}
+html[data-theme="dark"] .article-page .reading-meta,html[data-theme="dark"] .article-page .reading-outline nav a,html[data-theme="dark"] .article-page .outline-label,html[data-theme="dark"] .article-page .outline-top{color:#9198a1}
+html[data-theme="dark"] .article-page .reading-outline nav a[aria-current="location"]{color:#c0a4ed}
+@media(max-width:650px){.hero-kicker,.section-number,.sidebar-caption{font-size:9px}.tide-caption{font-size:8px}.home-page .note-row small{font-size:11px}.footer small{font-size:10px}.collection-bottom,.collection-bottom span{font-size:11px}.tide-art{width:190px}.home-page .intro .hero-kicker{letter-spacing:.07em}}

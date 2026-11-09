@@ -1,0 +1,35 @@
+.article .prose img.image-preview-trigger { cursor: zoom-in; }
+.image-preview-trigger:focus-visible { outline: 2px solid var(--design-accent, #b18a40); outline-offset: 5px; }
+html.image-preview-open { overflow: hidden; }
+.image-preview {
+  position: fixed; inset: 0; margin: auto; padding: 0;
+  width: min(1600px, calc(100vw - 48px)); height: calc(100vh - 48px); height: calc(100dvh - 48px);
+  max-width: none; max-height: none; border: 1px solid var(--design-line, #dbe4dc); border-radius: 12px;
+  background: var(--design-surface, #fff); color: var(--design-ink, #292439);
+  box-shadow: 0 24px 100px #0006;
+}
+.image-preview[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.image-preview::backdrop { background: #111827b3; backdrop-filter: blur(5px); }
+.image-preview-toolbar { display: flex; align-items: center; gap: 20px; padding: 12px 16px; border-bottom: 1px solid var(--design-line, #dbe4dc); }
+.image-preview-title { min-width: 0; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 15px; font-weight: 600; }
+.image-preview-controls { display: flex; align-items: center; gap: 6px; }
+.image-preview button { display: grid; place-items: center; min-width: 40px; min-height: 40px; padding: 6px 12px; border: 1px solid var(--design-line, #dbe4dc); border-radius: 6px; background: transparent; color: inherit; font: 14px/1.2 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; }
+.image-preview button:hover { background: var(--design-bg, #f6f3fc); }
+.image-preview button:disabled { opacity: .4; cursor: default; }
+.image-preview button[data-zoom-in], .image-preview button[data-zoom-out], .image-preview button[data-close] { font-size: 24px; padding-inline: 8px; }
+.image-preview-percentage { width: 56px; text-align: center; font: 13px/1.2 ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+.image-preview-close { margin-left: 4px; flex: none; }
+.image-preview-viewport { position: relative; min-height: 0; overflow: hidden; touch-action: none; overscroll-behavior: contain; user-select: none; background: var(--design-bg, #f6f3fc); }
+.image-preview-image { position: absolute; left: 50%; top: 50%; max-width: none; max-height: none; object-fit: contain; transform-origin: center; -webkit-user-drag: none; cursor: zoom-in; }
+.image-preview-viewport.is-zoomed .image-preview-image { cursor: grab; }
+.image-preview-viewport.is-dragging, .image-preview-viewport.is-dragging .image-preview-image { cursor: grabbing; }
+.image-preview-status { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 20px; text-align: center; color: var(--design-muted, #6b647a); }
+.image-preview-hint { margin: 0; padding: 10px 16px; border-top: 1px solid var(--design-line, #dbe4dc); color: var(--design-muted, #6b647a); text-align: center; font: 12px/1.4 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; }
+@media (max-width: 650px) {
+  .image-preview { width: calc(100vw - 16px); height: calc(100vh - 16px); height: calc(100dvh - 16px); border-radius: 8px; }
+  .image-preview-toolbar { flex-wrap: wrap; gap: 8px; padding: 10px; }
+  .image-preview-title { flex-basis: calc(100% - 60px); }
+  .image-preview-controls { order: 3; width: 100%; justify-content: center; }
+  .image-preview-close { margin-left: auto; }
+  .image-preview-hint { padding: 8px; font-size: 11px; }
+}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ note.title }} · 同步冲突{% endblock %}
+{% block content %}
+<div class="page-head"><p><a href="/admin">← 返回后台</a></p><h1>处理同步冲突</h1><p>{{ note.title }} · 两份正文都已保留。确认后等待电脑下一次同步；本地若再次变化，会重新提示冲突。</p></div>
+<p class="status">{{ '待处理' if conflict.status=='open' else '等待本地确认' if conflict.status=='resolved' else '已完成' }}</p>
+<div class="compare-columns"><section><h2>本地正文</h2><pre>{{ conflict.local_body }}</pre></section><section><h2>网站正文</h2><pre>{{ note.body }}</pre></section></div>
+<details class="version-panel"><summary>查看逐行差异</summary><pre class="diff">{{ diff or '正文相同，可能存在元数据变化' }}</pre></details>
+{% if conflict.base_body %}<details class="version-panel"><summary>共同旧版本</summary><pre>{{ conflict.base_body }}</pre></details>{% endif %}
+{% if conflict.status=='open' %}<form class="stack-form" method="post" data-confirm="确认采用此正文，并排队同步到本地？"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="local_sha" value="{{ conflict.local_sha }}"><input type="hidden" name="server_sha" value="{{ server_record_sha }}"><label>手动合并正文<textarea name="body" rows="18">{{ note.body }}</textarea></label><div class="form-actions"><button class="button" name="action" value="merge">保存合并正文</button><button class="button button-light" name="action" value="local">采用本地正文</button><button class="button button-light" name="action" value="server">采用网站正文</button></div><p class="muted">分类与摘要保留网站当前值，可在编辑页调整。</p></form>{% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+#proposal .stack-form {max-width: 68rem;}
+#proposal-diff {
+  max-height: 55vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: .875rem;
+  line-height: 1.75;
+  border: 1px solid var(--border, #d7cfe6);
+  border-radius: .65rem;
+  padding: 1rem;
+}
+#proposal-diff .diff-added {background: rgba(46, 139, 87, .16);}
+#proposal-diff .diff-removed {background: rgba(220, 20, 60, .12);}
+#proposal-diff .diff-heading {font-weight: 700;}
+#proposal-apply-form {margin-block: 1rem;}
+#proposal-apply-form label {display: flex; flex-direction: row; align-items: center; gap: .65rem;}
+#proposal-confirm {width: 1.1rem; height: 1.1rem; min-height: 1.1rem; flex: 0 0 auto; margin: 0; padding: 0;}

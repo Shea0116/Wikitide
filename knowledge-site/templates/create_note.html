@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}新建笔记{% endblock %}
+{% block extra_head %}<script src="/static/note-entry.js?v=20261108a" defer></script>{% endblock %}
+{% block content %}
+<div class="page-head"><h1>新建笔记</h1><p>写下第一篇笔记，或<a href="/imports">导入已有资料</a>。</p></div>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<form class="stack-form note-create-form" method="post" data-note-create>
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <label>笔记标题<input name="title" maxlength="160" value="{{ values.title|default('') }}" required></label>
+  <label>保存空间<select name="team_id" required data-note-space aria-label="{{ ui('保存空间') }}">
+    {% if spaces %}<option value="">选择保存位置</option>{% endif %}
+    {% for space in spaces %}<option value="{{ space.id }}" {% if values.team_id == space.id|string %}selected{% endif %}>{{ space.name }}</option>{% endfor %}
+    <option value="new" {% if values.team_id == 'new' %}selected{% endif %}>新建一个自己的空间</option>
+  </select></label>
+  <div data-new-note-space {% if values.team_id != 'new' %}hidden{% endif %}>
+    <label>新空间名称<input name="space_name" maxlength="80" value="{{ values.space_name|default(ui('我的笔记')) }}" {% if values.team_id == 'new' %}required{% else %}disabled{% endif %}></label>
+    <p>新空间开始时只有你，之后可以邀请其他成员。</p>
+  </div>
+  <p>笔记仅对所选空间的成员可见。</p>
+  <label>Markdown 正文<textarea name="body" maxlength="100000" rows="16" required>{{ values.body|default('') }}</textarea></label>
+  <div class="note-create-submit"><button class="button" type="submit">创建笔记</button><a href="/teams">查看我的空间</a></div>
+</form>
+{% endblock %}

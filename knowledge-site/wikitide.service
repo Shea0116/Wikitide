@@ -1,0 +1,25 @@
+[Unit]
+Description=Wikitide knowledge library
+After=network.target
+
+[Service]
+Type=simple
+User=wikitide
+Group=wikitide
+WorkingDirectory=/opt/wikitide
+EnvironmentFile=/opt/wikitide/.env
+Environment=KB_DB_PATH=/opt/wikitide/data/site.db
+Environment=KB_CONTENT_ROOT=/opt/wikitide/content
+Environment=KB_COOKIE_SECURE=1
+Environment=KB_ALLOWED_HOSTS=wikitide.soulshea.vip
+ExecStart=/opt/wikitide/.venv/bin/uvicorn app:app --host 127.0.0.1 --port 8766 --workers 1
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/wikitide/data
+
+[Install]
+WantedBy=multi-user.target

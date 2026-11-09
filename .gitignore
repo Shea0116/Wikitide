@@ -1,0 +1,39 @@
+# Local data and configuration
+.DS_Store
+.env
+.env.*
+!.env.example
+sync-config.json
+**/content/
+**/data/
+**/work/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+__pycache__/
+*.pyc
+.venv/
+node_modules
+# Local operations records retained during migration
+knowledge-site/RELEASE-*.md
+knowledge-site/PERSONAL-KNOWLEDGE-AGENT-*.md
+knowledge-site/IMPROVEMENTS-20261022.md
+knowledge-site/DESIGN.md
+# Signing material and generated output
+*.key
+*.pem
+*.p12
+*.mobileprovision
+*.jks
+*.keystore
+
+# Original internal documentation stays local during repository extraction.
+knowledge-site/*.md
+!knowledge-site/README.md
+knowledge-site/evaluation/learning-feedback/README.md
+wikitide-app/*.md
+!wikitide-app/README.md
+!wikitide-app/THIRD_PARTY_NOTICES.md
+wikitide-app/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md

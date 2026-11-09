@@ -1,0 +1,9 @@
+[
+  {
+    "path": "Backend/Welcome.md",
+    "title": "欢迎使用识汐 Wikitide",
+    "summary": "独立部署的示例文章与入门步骤",
+    "category": "入门",
+    "visibility": "public"
+  }
+]

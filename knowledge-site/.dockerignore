@@ -1,0 +1,8 @@
+work/
+data/
+.env
+sync-config.json
+__pycache__/
+*.pyc
+.git/
+

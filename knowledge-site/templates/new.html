@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}新建笔记{% endblock %}
+{% block content %}
+<div class="page-head"><h1>新建笔记</h1><p>Backend/、Frontend/ 下的笔记公开；Developer/ 下的笔记仅管理员可读。创建后排队同步到本地。</p></div>
+{% if error %}<p class="alert">{{ error }}</p>{% endif %}
+<form class="stack-form" method="post" data-new-note><input type="hidden" name="csrf" value="{{ csrf }}"><label>文件路径<input name="path" placeholder="Frontend/新笔记.md" value="{{ values.path|default('') }}" required maxlength="500"></label><label>分类<input name="category" placeholder="Frontend / 工程实践" value="{{ values.category|default('') }}" maxlength="240"></label><label>摘要<textarea name="summary" maxlength="2000">{{ values.summary|default('') }}</textarea></label><label>Markdown 正文<textarea name="body" rows="18" required>{{ values.body|default('') }}</textarea></label><button class="button">创建笔记</button></form>
+{% endblock %}

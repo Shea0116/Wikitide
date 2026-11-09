@@ -1,0 +1,4 @@
+pypdfium2>=4,<6
+Pillow>=11,<13
+# Linux also requires the system tesseract binary and the chi_sim + eng data.
+# macOS can use Swift and the built-in Vision framework without Tesseract.

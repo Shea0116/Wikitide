@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ note.title if note else share.category }} · 分享{% endblock %}
+{% block body_class %}{{ 'article-page' if note else '' }} shared-page{% endblock %}
+{% block extra_head %}{% if pdf %}<link rel="stylesheet" href="/static/pdf-notes.css?v=20261108a">{% endif %}{% endblock %}
+{% block content %}
+{% if note %}
+<div class="reading-progress" aria-hidden="true"></div>
+<div class="reading-layout"><article class="article">
+  <div class="article-top">{% if share.category %}<a href="{{ share_prefix }}">← 返回分享目录</a>{% else %}<span class="muted">笔记分享</span>{% endif %}<span class="privacy-tag">链接分享 · 只读</span></div>
+  <h1>{{ note.title }}</h1>
+  {% if note.summary %}<p class="article-summary">{{ note.summary }}</p>{% endif %}
+  {% if pdf %}{% from 'pdf_source.html' import pdf_source with context %}{{ pdf_source(pdf) }}{% endif %}
+  {% if pdf and pdf.note_format == 'pdf' %}<details class="version-panel"><summary>笔记与摘录</summary><div class="prose">{{ html }}</div></details>{% else %}<div class="prose">{{ html }}</div>{% endif %}
+</article><aside class="reading-outline" aria-label="本文目录" hidden><details><summary>本页目录</summary><nav></nav></details><a class="outline-top" href="#content">回到顶部 ↑</a></aside></div>
+{% else %}
+<div class="page-head"><p class="eyebrow">目录分享 · 只读</p><h1>{{ share.category }}</h1><p>包含子目录，共 {{ total }} 篇笔记。</p></div>
+<div class="note-list">{% for item in notes %}<a class="note-row" href="{{ share_prefix }}/n/{{ item.id }}"><span><strong>{{ item.title }}</strong><small>{{ item.category }}</small>{% if item.summary %}<em>{{ item.summary }}</em>{% endif %}</span><span class="arrow">→</span></a>{% else %}<p class="empty">分享目录中暂时没有笔记。</p>{% endfor %}</div>
+<nav class="pagination" aria-label="分页">{% if page_number > 1 %}<a href="{{ share_prefix }}?page_number={{ page_number - 1 }}">上一页</a>{% else %}<span></span>{% endif %}<span>{{ ui("第 {0} 页").format(page_number) }}</span>{% if has_more %}<a href="{{ share_prefix }}?page_number={{ page_number + 1 }}">下一页</a>{% endif %}</nav>
+{% endif %}
+{% endblock %}

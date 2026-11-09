@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ note.title }} · 权限{% endblock %}
+{% block content %}
+<div class="page-head"><p class="eyebrow"><a href="/admin">← 返回管理后台</a></p><h1>{{ note.title }}</h1><p>{{ note.path }}</p></div>
+<form class="stack-form permission-form" action="/admin/n/{{ note.id }}" method="post"><input type="hidden" name="csrf" value="{{ csrf }}">
+  <label>公开范围<select name="visibility"><option value="private" {% if note.visibility == 'private' %}selected{% endif %}>私人：仅管理员与获授权账户</option><option value="public" {% if note.visibility == 'public' %}selected{% endif %}>公开：所有访客可阅读</option></select></label>
+  <h2>账户授权</h2><p class="muted">编辑权限同时包含阅读权限；只有编辑者角色可获编辑权限。</p>
+  {% for account in users %}<div class="permission-row"><span><strong>{{ account.username }}</strong><small>{{ '编辑者' if account.role == 'editor' else '阅读者' }}{% if not account.active %} · 已停用{% endif %}</small></span><label class="checkbox"><input type="checkbox" name="view_{{ account.id }}" {% if account.can_view %}checked{% endif %}>可阅读</label>{% if account.role == 'editor' %}<label class="checkbox"><input type="checkbox" name="edit_{{ account.id }}" {% if account.can_edit %}checked{% endif %}>可编辑</label>{% endif %}</div>{% else %}<p class="empty">还没有其他账户。</p>{% endfor %}
+  <div class="form-actions"><button class="button" type="submit">保存权限</button><a class="button button-light" href="/n/{{ note.id }}">查看笔记</a></div>
+</form>
+{% endblock %}
+

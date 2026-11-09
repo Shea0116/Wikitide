@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f6f3fc">
+  <meta name="description" content="识汐 Wikitide，一座随时可以回来的个人知识库。浏览、检索与记录，让知识有迹可循。">
+  <title>{% block title %}首页{% endblock %} · 识汐 Wikitide</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  {% if locale == 'en' %}<script src="/static/i18n/en.js?v=20261107a"></script>{% endif %}
+  <script src="/static/i18n.js?v=20261102a"></script>
+  <script src="/static/theme.js?v=20261102a"></script>
+  <link rel="stylesheet" href="/static/site.css">
+  <link rel="stylesheet" href="/static/fonts/kaiti.css">
+  <link rel="stylesheet" href="/static/theme.css?v=20261013-headings">
+  <link rel="stylesheet" href="/static/design.css?v=20261013a">
+  <link rel="stylesheet" href="/static/buttons.css?v=20261001c">
+  <link rel="stylesheet" href="/static/i18n.css?v=20261102a">
+  <script src="/static/ui.js?v=20261102a" defer></script>
+  <link rel="stylesheet" href="/static/features.css?v=20261023a">
+  <script src="/static/native-state.js?v=20261023a" defer></script>
+  <script src="/static/features.js?v=20261102a" defer></script>
+  <link rel="stylesheet" href="/static/updates.css?v=20261023a">
+  <script src="/static/updates.js?v=20261023a" defer></script>
+  <link rel="stylesheet" href="/static/image-preview.css?v=20261014a">
+  <script src="/static/image-preview.js?v=20261102a" defer></script>
+  <link rel="stylesheet" href="/static/navigation-order.css?v=20261013c">
+  <script src="/static/navigation-order.js?v=20261102a" defer></script>
+  {% if user %}<link rel="stylesheet" href="/static/note-entry.css?v=20261108a">{% endif %}
+  {% block extra_head %}{% endblock %}
+  {% if user and user.role == 'admin' %}
+  <link rel="stylesheet" href="/static/sharing.css?v=20261015a">
+  <script src="/static/sharing.js?v=20261102a" defer></script>
+  {% endif %}
+</head>
+<body class="{% block body_class %}{% endblock %}" data-cm-nonce="{{ request.state.editor_style_nonce }}" data-user-id="{{ user.id if user else '' }}" data-account-name="{{ user.username if user else '' }}" data-account-role="{{ user.role if user else '' }}" data-order-csrf="{{ csrf or '' }}">
+  <a class="skip" href="#content">跳到正文</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="识汐 Wikitide 首页"><img class="brand-logo" src="/static/logo.png" alt="识汐 Wikitide"></a>
+    <form class="searchbar" action="/search" method="get" role="search">
+      <label class="sr-only" for="site-search">搜索笔记</label>
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+      <input id="site-search" name="q" type="search" aria-keyshortcuts="/" placeholder="在知识里，找一个答案" value="{{ q|default('') }}">
+      <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+      <button type="submit">搜索 <svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
+    </form>
+    <nav class="account" aria-label="账户">
+      <a class="language-switch" data-language-switch href="/language/{{ 'zh-CN' if locale == 'en' else 'en' }}?next={{ (request.url.path ~ ('?' ~ request.url.query if request.url.query else ''))|urlencode }}" lang="{{ 'zh-CN' if locale == 'en' else 'en' }}" hreflang="{{ 'zh-CN' if locale == 'en' else 'en' }}" aria-label="{{ '切换到中文' if locale == 'en' else 'Switch to English' }}">{{ '中文' if locale == 'en' else 'English' }}</a>
+      <button class="theme-toggle" type="button" aria-label="切换白天和黑夜模式" title="切换白天和黑夜模式"><span class="theme-icon" aria-hidden="true"><svg class="control-icon moon-icon" viewBox="0 0 24 24" fill="none"><path d="M20 14.1A8.3 8.3 0 0 1 9.9 4a8.3 8.3 0 1 0 10.1 10.1Z"/></svg><svg class="control-icon sun-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></span><span data-theme-label>黑夜</span></button>
+      {% if user %}
+        <details class="account-menu">
+          <summary class="account-name" title="账户菜单">
+            <span class="account-username">{{ user.username }}</span>
+          </summary>
+          <nav class="account-dropdown" aria-label="用户菜单">
+            {% if user.role == 'admin' %}<a href="/admin"><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></svg><span>管理员平台</span></a>{% endif %}
+            <a href="/library"><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5C9 3 5 3 3 4v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-2-1-6-1-9 1Zm0 0v15"/></svg><span>我的阅读</span></a>
+            {% if workspace_enabled %}<a href="/agent/projects">项目与记忆</a>{% endif %}
+            <a href="/account">账户设置</a>
+            <a href="/updates" data-updates-open>更新说明</a>
+            <form action="/logout" method="post" data-logout><input type="hidden" name="csrf" value="{{ csrf }}"><button class="account-logout" type="submit"><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 4H5v16h8m-2-8h10m-4-4 4 4-4 4"/></svg><span>退出</span></button></form>
+          </nav>
+        </details>
+      {% else %}
+        <a class="login-link" href="/login">登录 <svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+      {% endif %}
+    </nav>
+  </header>
+  {% include "_creation_actions.html" %}
+  <div class="shell">
+    <aside class="sidebar" aria-label="知识分类">
+      <div class="sidebar-head"><span class="sidebar-caption">LIBRARY INDEX</span>知识地图</div>
+      <a class="sidebar-link {% if request.url.path == '/browse' and not request.query_params.get('category') %}is-active{% endif %}" href="/browse" {% if request.url.path == '/browse' and not request.query_params.get('category') %}aria-current="page"{% endif %}><span>全部笔记</span><span class="nav-arrow" aria-hidden="true">↗</span></a>
+      <a class="sidebar-link {% if request.url.path == '/explore' %}is-active{% endif %}" href="/explore" {% if request.url.path == '/explore' %}aria-current="page"{% endif %}><span>知识求索</span><span class="nav-arrow" aria-hidden="true">✧</span></a>
+      {% if workspace_enabled %}<a class="sidebar-link {% if request.url.path.startswith('/agent/') %}is-active{% endif %}" href="/agent/projects"><span>项目与记忆</span><span class="nav-arrow" aria-hidden="true">↗</span></a>{% endif %}
+      {% if user %}<a class="sidebar-link {% if request.url.path == '/teams' %}is-active{% endif %}" href="/teams" {% if request.url.path == '/teams' %}aria-current="page"{% endif %}><span>团队空间</span><span class="nav-arrow" aria-hidden="true">↗</span></a>{% endif %}
+      {% if user %}<a class="sidebar-link {% if request.url.path == '/imports' %}is-active{% endif %}" href="/imports"><span>资料导入</span><span class="nav-arrow" aria-hidden="true">↗</span></a>{% endif %}
+      {% if user %}<a class="sidebar-link" href="/library">我的阅读</a><a class="sidebar-link" href="/learn">学习与复习</a>{% endif %}
+      {% if user %}<a class="sidebar-link" href="/team-inbox">团队提及与待办</a>{% endif %}
+      {% if user and user.role=='admin' %}<a class="sidebar-link" href="/admin/shares">分享管理</a>{% endif %}
+      {% if user and user.role=='admin' %}<a class="sidebar-link" href="/admin/explore-quality">知识求索质量</a>{% endif %}
+      {% if user and user.role == 'admin' %}<a class="sidebar-link {% if request.url.path.startswith('/admin') %}is-active{% endif %}" href="/admin"><span>管理员平台</span><span class="nav-arrow" aria-hidden="true">↗</span></a>{% endif %}
+      {% for item in categories|default([]) %}
+        <a class="sidebar-link {% if request.query_params.get('category', '').split(' / ')[0] == item.path %}is-active{% endif %}" data-order-category-key="{{ item.path }}" href="/browse?category={{ item.path|urlencode }}" {% if request.query_params.get('category') == item.path %}aria-current="page"{% endif %}><span>{{ item.name }}</span><span class="count">{{ '%02d'|format(item.total) }}</span></a>
+      {% endfor %}
+    </aside>
+    <main id="content" class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <footer class="footer"><div class="footer-brand">识汐 <span>WIKITIDE</span></div><p>每一次回看，都有新的发现。</p><small>内容以原始笔记为准。技术、医疗和法律信息请核对更新日期及原始来源。</small><a href="#content">回到顶部 <span aria-hidden="true">↑</span></a></footer>
+  {% if user and user.role == 'admin' %}{% include 'sharing_dialog.html' %}{% endif %}
+  <a class="release-history-link" href="/updates" data-updates-open>更新说明</a>
+  {% include '_updates_dialog.html' %}
+</body>
+</html>

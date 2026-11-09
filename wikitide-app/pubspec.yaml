@@ -1,0 +1,41 @@
+name: wikitide
+description: 识汐 WikiTide 的 macOS、Android 和 iOS 客户端。
+publish_to: none
+version: 0.5.0+7
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  http: ^1.6.0
+  html: ^0.15.6
+  flutter_secure_storage: ^10.3.1
+  shared_preferences: ^2.5.5
+  path_provider: ^2.1.6
+  url_launcher: ^6.3.2
+  webview_flutter: ^4.9.0
+  webview_flutter_wkwebview: ^3.26.0
+  sqlite3: ^3.5.2
+  cryptography: ^2.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/reader.css
+  fonts:
+    - family: WikiTide Kai
+      fonts:
+        - asset: assets/fonts/WikiTideKai.ttf
+    - family: WikiTide Song
+      fonts:
+        - asset: assets/fonts/WikiTideSong.ttf

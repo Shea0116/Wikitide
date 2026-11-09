@@ -1,0 +1,108 @@
+/* 识汐：淡紫色首页，白色 GitHub 风格正文，支持日夜切换。 */
+:root{--heading-h1:#103f7d;--heading-h2:#0755b5;--heading-h3:#1467bd;--heading-h4:#2374ad;--heading-h5:#286b98;--heading-h6:#386681;--ink:#25243a;--muted:#6f7184;--line:#e4e1f0;--wash:#f8f7fd;--paper:#fff;--green:#6756bd;--green2:#5744ac;--mint:#eeebff;--accent:#dcd5ff;--shadow:0 12px 34px rgba(78,62,138,.07)}
+body{background:#f8f7fd;color:var(--ink)}
+a{color:#6254b4}
+.topbar{background:#fff;border-bottom-color:#e8e5f1;box-shadow:0 2px 14px rgba(50,39,99,.035)}
+.brand{gap:10px;color:#34296f;line-height:1.06}.brand-mark{background:#6c5ac4;color:#fff;border-radius:10px}
+.brand-name{display:flex;flex-direction:column;gap:2px}.brand-name small{font-size:10px;letter-spacing:.12em;font-weight:600;color:#8078a2}
+.brand-logo{display:block;width:185px;height:auto;max-height:65px;object-fit:contain}
+.searchbar{background:#fbfaff;border-color:#ded9ee}.searchbar:focus-within{outline-color:#a59ae0}
+.searchbar button{background:#6b59bf;white-space:nowrap;min-width:64px}.searchbar button:hover{background:#5745a8}
+.account{gap:12px}.account-name{color:#77718b}
+.theme-toggle{display:inline-flex;align-items:center;gap:6px;background:#f3f0ff;color:#5541a9;border:1px solid #dfd9f5;border-radius:8px;padding:6px 10px;font-size:13px;font-weight:650;white-space:nowrap}
+.theme-toggle:hover{background:#e8e2ff}.theme-icon{font-size:16px;line-height:1}
+.account>a[href="/login"],.searchbar button,.home-page .eyebrow,.home-page .section-heading h2,.home-page .guide-card strong{font-family:"Wikitide Kai","Kaiti SC","STKaiti","KaiTi",serif;font-weight:400}
+.account>a[href="/login"]{font-size:21px}.searchbar button{font-size:21px}
+.home-page .eyebrow{font-size:19px;letter-spacing:.04em;text-transform:none}.home-page .section-heading h2{font-size:31px;line-height:1.2}.home-page .guide-card strong{font-size:21px}
+.sidebar{background:#f9f8ff;border-right-color:#e8e4f2}.sidebar-head{color:#9a96b0}.sidebar-link{color:#524e6d}.sidebar-link:hover{background:#eeebfb;color:#46399b}.count{color:#8a83aa}
+.intro{background:linear-gradient(118deg,#e4dfff 0%,#eeeaff 55%,#f6f3ff 100%);color:#2c2455;border:1px solid #ded7fa;border-radius:18px;box-shadow:0 18px 44px rgba(93,74,153,.10)}
+.intro:after{border-color:rgba(118,94,207,.17);box-shadow:0 0 0 55px rgba(118,94,207,.04),0 0 0 115px rgba(118,94,207,.025)}
+.intro .eyebrow{color:#6956ba}.intro h1{color:#322767}.intro p:last-child{color:#635b86}
+.eyebrow{color:#6f5dbd}
+.guide-card{background:#fff;border-color:#e5e0f3;border-radius:13px;box-shadow:var(--shadow)}.guide-card:hover{border-color:#ae9de5}.guide-icon{background:#eee9ff;color:#6553ba}
+.note-list{background:#fff;border-color:#e7e4ef;box-shadow:var(--shadow)}.note-row{border-bottom-color:#eeebf4}.note-row:hover{background:#f8f6ff}.note-row small{color:#8983a0}.arrow{color:#9d92d3}
+.page-head h1{color:#28243e}.page-head p:last-child{color:#737185}
+.form-wrap,.admin-section,.permission-form{background:#fff;border-color:#e3dfef}
+input:not([type=checkbox]),select,textarea{background:#fff;border-color:#d5d0e4;color:#28243e}
+input:focus,select:focus,textarea:focus{outline-color:#a59ae0}
+.button{background:#6654bc;border-color:#6654bc}.button:hover{background:#5543a9}
+.button-light{background:#fff;color:#5543a9;border-color:#d4cee9}.button-light:hover{background:#f1eeff;color:#443596}
+.admin-note:hover{background:#f8f6ff}.footer{color:#88849a;border-top-color:#e7e3ef}
+.privacy-tag{background:#f1ecff;color:#6853ad}
+
+/* Browse view: only the root categories live in the sidebar; descendants unfold here. */
+.directory-tree{border:1px solid #e1ddec;border-radius:12px;background:#fff;margin:0 0 23px;padding:17px 19px;box-shadow:var(--shadow)}
+.directory-title{font-size:12px;font-weight:800;letter-spacing:.12em;color:#918ba7;margin:0 0 8px}
+.directory-tree ul{list-style:none;margin:0;padding:0}.directory-tree ul ul{border-left:1px solid #e2ddef;margin:4px 0 4px 12px;padding-left:15px}
+.directory-tree li{margin:2px 0}.directory-tree details{padding:0}.directory-tree summary{cursor:pointer;list-style-position:outside;padding:6px 6px;color:#47405f;font-weight:650;border-radius:6px}
+.directory-tree summary:hover,.tree-leaf:hover{background:#f4f1ff;text-decoration:none}.directory-tree summary::marker{color:#8171c6}
+.tree-count{float:right;font-size:12px;color:#9c96af;font-weight:500;margin-left:10px}
+.tree-view-all{display:inline-block;margin:2px 0 5px 20px;font-size:12px;font-weight:650}
+.tree-leaf{display:block;padding:5px 9px;border-radius:6px;color:#5c576e;font-size:14px}.tree-leaf.selected{background:#eeeaff;color:#5d4bad;font-weight:700}
+
+/* Reading pages follow familiar GitHub Markdown spacing and colors. */
+body.article-page{background:#fff;color:#1f2328}
+.article-page .topbar,.article-page .sidebar,.article-page .footer{background:#fff}
+.article-page .content{padding-top:38px}
+.article-page .article{max-width:880px;margin:0 auto;padding:0;background:#fff;border:0;border-radius:0;box-shadow:none}
+.article-page .article-top{padding-bottom:20px;border-bottom:1px solid #d1d9e0;margin-bottom:26px}
+.article-page .article h1{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;font-size:2em;font-weight:650;color:var(--heading-h1);line-height:1.25}
+.article-page .article-summary{font-size:15px;color:#59636e;border-bottom:1px solid #d1d9e0}
+.article-page .prose{font-size:16px;line-height:1.65;color:#1f2328}
+.article-page .prose h1,.article-page .prose h2,.article-page .prose h3,.article-page .prose h4,.article-page .prose h5,.article-page .prose h6{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;color:#1f2328;font-weight:650;line-height:1.25;margin:1.45em 0 .65em}
+.article-page .prose h1{font-size:2em;border-bottom:1px solid #d1d9e0;padding-bottom:.3em}
+.article-page .prose h2{font-size:1.5em;border-bottom:1px solid #d1d9e0;padding-bottom:.3em}
+.article-page .prose h3{font-size:1.25em}.article-page .prose h4{font-size:1em}
+.article-page .prose a{color:#0969da;text-decoration:none}.article-page .prose a:hover{text-decoration:underline}
+.article-page .prose code{background:#eff1f3;color:#1f2328;border-radius:6px;padding:.18em .38em;font-size:85%}
+.article-page .prose pre{background:#f6f8fa;color:#1f2328;border-radius:6px;padding:16px;line-height:1.45}
+.article-page .prose pre code{background:transparent;color:inherit;padding:0;font-size:100%}
+.article-page .prose blockquote{background:transparent;border-left:4px solid #d1d9e0;color:#59636e;padding:0 1em}
+.article-page .prose th,.article-page .prose td{border-color:#d1d9e0;padding:6px 13px}.article-page .prose th{background:#f6f8fa}
+.article-page .prose td[rowspan]{vertical-align:middle}
+.article-page .prose .task-list-item{list-style:none}.article-page .prose .task-checkbox{margin:0 .5em 0 -1.4em;vertical-align:middle;accent-color:#6756bd}
+.article-page .prose hr{border-top:2px solid #d1d9e0}
+
+html[data-theme="dark"]{--heading-h1:#a8ccff;--heading-h2:#79b5ff;--heading-h3:#86c3ff;--heading-h4:#8ec8ee;--heading-h5:#9dcbe8;--heading-h6:#accddd;color-scheme:dark;--ink:#e6e7f2;--muted:#a8a9bb;--line:#333447;--wash:#10111b;--paper:#1a1b29;--green:#7567ce;--green2:#aa9cf4;--mint:#302b4b;--accent:#9f92e5;--shadow:0 12px 36px rgba(0,0,0,.18)}
+html[data-theme="dark"] body{background:#10111b;color:var(--ink)}
+html[data-theme="dark"] a{color:#baaaff}
+html[data-theme="dark"] .topbar{background:#171824;border-bottom-color:#323147;box-shadow:none}
+html[data-theme="dark"] .brand{color:#f1edff}html[data-theme="dark"] .brand-mark{background:#8d7ae6}html[data-theme="dark"] .brand-name small{color:#aaa2cc}
+html[data-theme="dark"] .brand-logo{filter:brightness(0) invert(.91)}
+html[data-theme="dark"] .searchbar{background:#242536;border-color:#45445d}html[data-theme="dark"] .searchbar input{color:#f1efff}html[data-theme="dark"] .searchbar input::placeholder{color:#a8a5bc}
+html[data-theme="dark"] .searchbar button{background:#7460d0}html[data-theme="dark"] .searchbar button:hover{background:#8a76e0}
+html[data-theme="dark"] .theme-toggle{background:#28243e;color:#dfd7ff;border-color:#514873}html[data-theme="dark"] .theme-toggle:hover{background:#37304f}
+html[data-theme="dark"] .sidebar{background:#141521;border-right-color:#303044}html[data-theme="dark"] .sidebar-link{color:#c3c0d9}html[data-theme="dark"] .sidebar-link:hover{background:#27243d;color:#fff}html[data-theme="dark"] .count{color:#aaa3c3}
+html[data-theme="dark"] .intro{background:linear-gradient(120deg,#292442,#3b315f);color:#f0ebff;border-color:#4a4070;box-shadow:none}html[data-theme="dark"] .intro h1{color:#f5f1ff}html[data-theme="dark"] .intro p:last-child{color:#d0c8eb}html[data-theme="dark"] .intro .eyebrow{color:#c1b2ff}
+html[data-theme="dark"] .eyebrow{color:#aa9bef}html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3{color:#f1eff9}
+html[data-theme="dark"] .guide-card,html[data-theme="dark"] .note-list,html[data-theme="dark"] .directory-tree,html[data-theme="dark"] .form-wrap,html[data-theme="dark"] .admin-section,html[data-theme="dark"] .permission-form{background:#1b1c2a;border-color:#34354b;box-shadow:none}
+html[data-theme="dark"] .guide-card{color:#eceaf8}html[data-theme="dark"] .guide-icon{background:#322c50;color:#c9baff}html[data-theme="dark"] .guide-card:hover{border-color:#8a78cc}
+html[data-theme="dark"] .note-row,html[data-theme="dark"] .admin-note{color:#e6e4f4;border-bottom-color:#333447}html[data-theme="dark"] .note-row:hover,html[data-theme="dark"] .admin-note:hover{background:#292a3d}html[data-theme="dark"] .note-row small{color:#a4a0bd}
+html[data-theme="dark"] .directory-tree ul ul{border-left-color:#414058}html[data-theme="dark"] .directory-tree summary,html[data-theme="dark"] .tree-leaf{color:#d7d2e9}html[data-theme="dark"] .directory-tree summary:hover,html[data-theme="dark"] .tree-leaf:hover,html[data-theme="dark"] .tree-leaf.selected{background:#302b49}
+html[data-theme="dark"] input:not([type=checkbox]),html[data-theme="dark"] select,html[data-theme="dark"] textarea{background:#202131;color:#eeeaf9;border-color:#4d4b63}
+html[data-theme="dark"] .button-light{background:#222235;color:#c8bfff;border-color:#4a465f}html[data-theme="dark"] .button-light:hover{background:#34304c;color:#fff}
+html[data-theme="dark"] .privacy-tag{background:#302849;color:#cbb6ff}html[data-theme="dark"] .footer{color:#a09db3;border-top-color:#323247}
+
+html[data-theme="dark"] body.article-page{background:#0d1117;color:#e6edf3}
+html[data-theme="dark"] .article-page .topbar,html[data-theme="dark"] .article-page .sidebar,html[data-theme="dark"] .article-page .footer,html[data-theme="dark"] .article-page .article{background:#0d1117}
+html[data-theme="dark"] .article-page .article-top,html[data-theme="dark"] .article-page .article-summary{border-color:#30363d}
+html[data-theme="dark"] .article-page .prose{color:#e6edf3}
+html[data-theme="dark"] .article-page .article-summary,html[data-theme="dark"] .article-page .prose blockquote{color:#9198a1}
+html[data-theme="dark"] .article-page .prose h1,html[data-theme="dark"] .article-page .prose h2{border-bottom-color:#30363d}
+html[data-theme="dark"] .article-page .prose a{color:#4493f8}
+html[data-theme="dark"] .article-page .prose code{background:#24292f;color:#e6edf3}
+html[data-theme="dark"] .article-page .prose pre{background:#151b23;color:#e6edf3}
+html[data-theme="dark"] .article-page .prose pre code{background:transparent}
+html[data-theme="dark"] .article-page .prose blockquote{border-left-color:#3d444d}
+html[data-theme="dark"] .article-page .prose th,html[data-theme="dark"] .article-page .prose td{border-color:#3d444d}html[data-theme="dark"] .article-page .prose th{background:#151b23}
+html[data-theme="dark"] .article-page .prose hr{border-top-color:#30363d}
+
+@media(max-width:650px){.brand-logo{width:156px;max-height:57px}.theme-toggle{padding:6px 9px}.theme-toggle [data-theme-label]{display:none}.article-page .content{padding-top:25px}}
+
+/* Heading levels inherit the theme palette; explicit inline note colors keep priority. */
+.article-page .prose h1,.preview-panel.prose h1{color:var(--heading-h1)}
+.article-page .prose h2,.preview-panel.prose h2{color:var(--heading-h2)}
+.article-page .prose h3,.preview-panel.prose h3{color:var(--heading-h3)}
+.article-page .prose h4,.preview-panel.prose h4{color:var(--heading-h4)}
+.article-page .prose h5,.preview-panel.prose h5{color:var(--heading-h5)}
+.article-page .prose h6,.preview-panel.prose h6{color:var(--heading-h6)}

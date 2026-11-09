@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}团队空间{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/teams/app.css?v=20261023a">
+<script type="module" src="/static/teams/app.js?v=20261102a"></script>
+{% endblock %}
+{% block body_class %}teams-page{% endblock %}
+{% block content %}
+<div id="team-root" data-csrf="{{ csrf }}" data-user-id="{{ user.id }}" data-username="{{ user.username }}">
+  <p role="status">正在打开团队空间…</p>
+</div>
+<noscript>团队空间需要启用 JavaScript。你仍可从左侧浏览个人笔记。</noscript>
+{% endblock %}

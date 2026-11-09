@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}后台资料任务{% endblock %}
+{% block extra_head %}<script src="/static/knowledge-task.js?v=20261107a" defer></script>{% endblock %}
+{% block content %}
+<section id="knowledge-task" data-id="{{ task.id }}" data-csrf="{{ csrf }}">
+  <div class="page-head"><h1>{{ task.topic }}</h1><p>执行进度和结果保存在当前账户中，可以稍后继续查看。</p><a href="/agent/tasks">研究与反馈任务</a> · <a href="/explore">返回知识求索</a></div>
+  <p id="knowledge-task-status" role="status"></p><ol id="knowledge-task-steps"></ol>
+  <div class="filter-form"><button id="knowledge-task-refresh" type="button">刷新状态</button><button id="knowledge-task-cancel" type="button">取消任务</button><button id="knowledge-task-resume" type="button" hidden>确认重试</button></div>
+  <article id="knowledge-task-result" class="prose"></article>{% if artifacts_enabled %}<button id="knowledge-task-draft" class="button" type="button" hidden>保存为研究草稿</button>{% endif %}<div id="knowledge-task-links"></div>
+</section>
+{% endblock %}

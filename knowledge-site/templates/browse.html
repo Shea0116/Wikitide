@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ category or '全部笔记' }}{% endblock %}
+{% block content %}
+{% macro tree_node(item, selected) %}
+  <li data-order-kind="category" data-order-key="{{ item.path }}">
+    {% if item.children %}
+      <details {% if selected == item.path or selected.startswith(item.path + ' / ') %}open{% endif %}>
+        <summary>{{ item.name }}<span class="tree-count">{{ item.total }}</span></summary>
+        <a class="tree-view-all" href="/browse?category={{ item.path|urlencode }}">查看此目录全部笔记</a>
+        <ul data-order-parent="{{ item.path }}">{% for child in item.children %}{{ tree_node(child, selected) }}{% endfor %}</ul>
+      </details>
+    {% else %}
+      <a class="tree-leaf {% if selected == item.path %}selected{% endif %}" href="/browse?category={{ item.path|urlencode }}">{{ item.name }}<span class="tree-count">{{ item.total }}</span></a>
+    {% endif %}
+  </li>
+{% endmacro %}
+<div class="page-head"><p class="eyebrow">分类浏览</p><h1>{{ category or '全部可见笔记' }}</h1><p>选择一篇笔记开始阅读。</p>{% if category and notes and user and user.role == 'admin' %}<button class="button button-light" type="button" data-share-category="{{ category }}">链接分享此目录</button>{% endif %}</div>
+<nav class="directory-tree" data-order-root aria-label="树状目录"><div class="directory-title">目录</div><ul data-order-parent="">{% for item in categories %}{{ tree_node(item, category) }}{% endfor %}</ul></nav>
+<div class="note-list">
+  {% for note in notes %}<a class="note-row" href="/n/{{ note.id }}"><span><strong>{% if note.is_pdf %}<span class="privacy-tag">PDF</span> {% endif %}{{ note.title }}</strong><small>{{ note.category }}</small>{% if note.summary %}<em>{{ note.summary }}</em>{% endif %}</span><span class="arrow">→</span></a>{% else %}<p class="empty">这里暂时没有可见笔记。</p>{% endfor %}
+</div>
+<nav class="pagination" aria-label="分页">
+  {% if page_number > 1 %}<a class="page-prev" href="/browse?category={{ category|urlencode }}&page_number={{ page_number - 1 }}"><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5m5-5-5 5 5 5"/></svg>上一页</a>{% else %}<span aria-hidden="true"></span>{% endif %}
+  <span class="page-position">{{ ui("第 {0} 页").format(page_number) }}</span>
+  {% if has_more %}<a class="page-next" href="/browse?category={{ category|urlencode }}&page_number={{ page_number + 1 }}">下一页<svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>{% else %}<span aria-hidden="true"></span>{% endif %}
+</nav>
+{% endblock %}

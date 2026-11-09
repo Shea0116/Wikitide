@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}独立作答{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="/static/practice.css?v=20261107a"><script src="/static/practice.js?v=20261107b" defer></script>{% endblock %}
+{% block content %}
+<section id="practice" data-id="{{ session.id }}" data-csrf="{{ csrf }}">
+  <div class="page-head"><p class="eyebrow">独立作答</p><h1>{{ session.question }}</h1><a href="/learn">返回学习与复习</a></div>
+  <p>先写下自己的解释，再提交查看卡片答案和参考反馈。</p>
+  <a href="{{ session.source_url }}" target="_blank" rel="noopener">核对原文章</a>
+  <form id="practice-answer-form" class="stack-form">
+    <label for="practice-answer">我的作答</label><textarea id="practice-answer" rows="10" maxlength="5000" disabled></textarea>
+    <label class="practice-hint-row"><input id="practice-hint" type="checkbox" disabled>作答时参考了答案或提示</label>
+    <p>输入会保存到当前账户。提交后，作答与卡片答案将交给模型生成参考反馈。</p>
+    <div class="filter-form"><button id="practice-save" class="button button-light" type="button" disabled>保存作答</button><button id="practice-submit" type="submit" class="button" disabled>提交并获取反馈</button><button id="practice-reload" class="button button-light" type="button">重新读取</button></div>
+  </form>
+  <p id="practice-status" role="status"></p><a id="practice-job" hidden>查看反馈任务</a>
+  <section id="practice-review" hidden><h2>参考反馈</h2><p id="practice-verdict"></p><p id="practice-quote-label" hidden>本次反馈引用的作答原句</p><blockquote id="practice-quote" aria-label="本次反馈引用的作答原句" hidden></blockquote><p id="practice-feedback"></p><ul id="practice-points"></ul>
+    <details><summary>卡片参考答案</summary><pre id="practice-reference" class="review-answer"></pre></details>
+    <form id="practice-correction" class="stack-form" hidden><h3>记录我的判断</h3><p>保留原反馈，同时记录你的判断。</p>
+      <label for="practice-correction-verdict">我的判断</label><select id="practice-correction-verdict"><option value="correct">要点正确</option><option value="partial">部分正确</option><option value="needs_review">需要继续学习</option><option value="uncertain">需要核对</option></select>
+      <label for="practice-correction-comment">修正说明</label><textarea id="practice-correction-comment" rows="3" maxlength="1000"></textarea><button class="button button-light" type="submit">保存我的判断</button>
+      <p id="practice-correction-saved"></p>
+    </form>
+  </section>
+  <form id="practice-again" method="post" action="/learn/cards/{{ session.card_id }}/practice" hidden>
+    <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="practice_key" value="next-{{ session.id }}"><button class="button" type="submit">再练一次</button>
+  </form>
+</section>
+{% endblock %}

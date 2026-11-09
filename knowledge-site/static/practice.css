@@ -1,0 +1,4 @@
+#practice .practice-hint-row {display: flex; flex-direction: row; align-items: center; gap: .65rem;}
+#practice-hint {width: 1.1rem; height: 1.1rem; min-height: 1.1rem; flex: 0 0 auto; margin: 0; padding: 0;}
+#practice-quote {margin: .5rem 0 1rem; padding: .75rem 1rem; border-left: 3px solid #7959a4; background: rgba(121, 89, 164, .07); white-space: pre-wrap; overflow-wrap: anywhere;}
+#practice-quote-label {font-size: .9rem;}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "description": "Synthetic prompt-availability replay; no real model quality or billing claims.",
+  "cases": [
+    {
+      "id": "early-requirement-30-rounds",
+      "rounds": 30,
+      "requirements": [{"round": 0, "marker": "CONSTRAINT_KEEP_CODE"}]
+    },
+    {
+      "id": "multiple-requirements-35-rounds",
+      "rounds": 35,
+      "requirements": [
+        {"round": 0, "marker": "CONSTRAINT_BEGINNER_READER"},
+        {"round": 5, "marker": "CONSTRAINT_KEEP_EXAMPLES"},
+        {"round": 12, "marker": "CONSTRAINT_EXPLAIN_TRADEOFFS"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+.agent-context-panel {margin: .7rem 1rem; padding: .7rem; border: 1px solid #c6b8a1; border-radius: .5rem;}
+.agent-context-panel summary {cursor: pointer; font-weight: 600;}
+.agent-context-panel p {font-size: .88rem; line-height: 1.6;}
+.agent-context-panel label {display: block; font-size: .88rem;}
+.agent-context-panel textarea {display: block; width: 100%; box-sizing: border-box; margin: .4rem 0; padding: .5rem; color: inherit; background: transparent; border: 1px solid #c6b8a1; border-radius: .3rem; font: inherit; resize: vertical;}
+.agent-context-panel button {margin: .2rem .5rem .2rem 0; padding: .35rem .6rem; cursor: pointer;}
+.agent-context-panel button:disabled {cursor: default; opacity: .6;}

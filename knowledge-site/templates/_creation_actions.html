@@ -1,0 +1,6 @@
+{% if user %}
+<nav class="note-entry-actions" aria-label="记录与导入">
+  <a class="note-entry-primary" href="{{ '/new' if user.role == 'admin' else '/create' }}"><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>新建笔记</a>
+  <a href="/imports" {% if request.url.path == '/imports' %}aria-current="page"{% endif %}><svg class="control-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></svg>资料导入</a>
+</nav>
+{% endif %}

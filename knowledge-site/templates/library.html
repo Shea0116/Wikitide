@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}我的阅读{% endblock %}
+{% block content %}
+<div class="page-head"><p class="eyebrow">阅读与积累</p><h1>我的阅读</h1><p>收藏、阅读位置与批注跟随账户保存。用收藏夹组织学习路线，用顺序安排下一篇。</p><a href="/learn">学习与复习 →</a></div>
+<form class="filter-form" method="get"><label>查看<select name="tab">{% for key,label in [('all','全部记录'),('bookmarks','收藏的笔记'),('recent','最近阅读'),('later','稍后读'),('completed','已读'),('annotations','划线批注')] %}<option value="{{ key }}" {{ 'selected' if tab==key else '' }}>{{ ui(label) }}</option>{% endfor %}</select></label><label>关键词<input name="q" value="{{ q }}" maxlength="100"></label><label>收藏夹 / 学习路线<select name="folder"><option value="">全部</option>{% for item in folders %}<option {{ 'selected' if folder==item.folder else '' }}>{{ item.folder }}</option>{% endfor %}</select></label><button class="button">筛选</button></form>
+<p class="muted">共 {{ total }} 条记录</p>
+{% if tab=='annotations' %}
+{% for item in annotations %}<section class="version-panel"><a href="/n/{{ item.note_id }}">{{ item.title }}</a><blockquote>{{ item.quote }}</blockquote><p>{{ item.comment }}</p>{% if item.body_sha!=item.current_sha %}<p>原文已更新，请重新核对摘录。</p>{% endif %}<form method="post" action="/annotations/{{ item.id }}/delete" data-confirm="删除这条个人批注？"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="button button-light">删除批注</button></form></section>{% else %}<p class="empty">阅读文章时选中文字，即可保存个人批注。</p>{% endfor %}
+{% else %}
+<div class="note-list">{% for note in notes %}<section class="reading-item"><a class="note-row" href="/n/{{ note.id }}?resume=1"><span><strong>{{ note.title }}</strong><small>{{ note.category }} · {{ '已读' if note.completed else '阅读中' }}{% if note.folder %} · {{ note.folder }}{% endif %}</small></span><span>继续阅读 ↗</span></a><details><summary>整理与学习</summary><form method="post" action="/n/{{ note.id }}/organize" class="filter-form"><input type="hidden" name="csrf" value="{{ csrf }}"><label>收藏夹 / 学习路线<input name="folder" value="{{ note.folder or '' }}" maxlength="80" list="reading-folders"></label><label>顺序<input name="ordinal" type="number" min="0" max="10000" value="{{ note.ordinal or 0 }}"></label><label><input name="later" type="checkbox" value="1" {{ 'checked' if note.later else '' }}>稍后读</label><label><input name="completed" type="checkbox" value="1" {{ 'checked' if note.completed else '' }}>已读</label><button class="button button-light">保存整理</button><a href="/learn?note_id={{ note.id }}">生成自测题</a></form></details></section>{% else %}<p class="empty">暂无匹配记录，阅读或收藏一篇文章后会出现在这里。</p>{% endfor %}</div>
+<datalist id="reading-folders">{% for item in folders %}<option value="{{ item.folder }}">{% endfor %}</datalist>
+{% endif %}
+<nav class="pagination" aria-label="阅读分页">{% if page_number>1 %}<a href="{{ previous }}">上一页</a>{% endif %}<span>{{ ui("第 {0} 页").format(page_number) }}</span>{% if has_more %}<a href="{{ following }}">下一页</a>{% endif %}</nav>
+{% endblock %}

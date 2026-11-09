@@ -1,0 +1,472 @@
+.admin-platform-page .shell {
+  max-width: 1600px;
+}
+.admin-platform {
+  --admin-bg: #fcfaf5;
+  --admin-surface: #fffefa;
+  --admin-ink: #2f3b34;
+  --admin-muted: #72796e;
+  --admin-line: #e0e2d7;
+  --admin-accent: #435c4b;
+  color: var(--admin-ink);
+  font-family: "Wikitide Kai", "Kaiti SC", serif;
+  padding: 16px 0 48px;
+}
+.platform-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.platform-eyebrow {
+  color: var(--admin-muted);
+  font:
+    10px/1.5 ui-monospace,
+    monospace;
+  letter-spacing: 0.15em;
+  margin: 0 0 16px;
+}
+.platform-head h1 {
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 400;
+  margin: 0 0 14px;
+  letter-spacing: -0.04em;
+}
+.platform-head p:not(.platform-eyebrow),
+.platform-panel > p,
+.platform-section-head p {
+  color: var(--admin-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.platform-link {
+  color: var(--admin-accent);
+  font-size: 14px;
+  white-space: nowrap;
+}
+.platform-tabs {
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  border-bottom: 1px solid var(--admin-line);
+  margin-bottom: 28px;
+  overflow-x: auto;
+}
+.admin-platform button {
+  font: inherit;
+  cursor: pointer;
+}
+.admin-platform button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.platform-tabs button,
+.platform-tabs a {
+  border: 0;
+  padding: 14px 1px;
+  background: transparent;
+  color: var(--admin-muted);
+  white-space: nowrap;
+  font-size: 14px;
+  text-decoration: none;
+}
+.platform-tabs button[aria-current] {
+  border-bottom: 3px solid var(--admin-accent);
+  color: var(--admin-ink);
+}
+.platform-tabs a {
+  margin-left: auto;
+}
+.platform-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.platform-metrics article {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: 12px;
+  padding: 22px;
+}
+.platform-metrics article > div {
+  display: flex;
+  justify-content: space-between;
+  color: var(--admin-muted);
+  font-size: 14px;
+}
+.platform-metrics small {
+  font:
+    10px ui-monospace,
+    monospace;
+  opacity: 0.6;
+}
+.platform-metrics strong {
+  display: block;
+  font:
+    38px/1.5 ui-serif,
+    Georgia,
+    serif;
+  margin: 16px 0 6px;
+}
+.platform-metrics p {
+  color: var(--admin-muted);
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+}
+.platform-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.platform-panel {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: 12px;
+  padding: clamp(22px, 3vw, 34px);
+}
+.platform-panel h2 {
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0 0 16px;
+}
+.registration-panel {
+  background: linear-gradient(135deg, #edf1e8, var(--admin-surface));
+}
+.registration-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding: 28px 0;
+  margin-bottom: 16px;
+}
+.state-open,
+.account-enabled {
+  color: #426a4a;
+}
+.state-closed,
+.account-disabled {
+  color: #9c653b;
+}
+.admin-platform
+  button:not(.platform-tabs button):not(.platform-shortcuts button) {
+  border: 1px solid var(--admin-line);
+  border-radius: 7px;
+  padding: 9px 15px;
+  min-height: 42px;
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+}
+.admin-platform button.platform-primary,
+.registration-state button {
+  background: var(--admin-accent) !important;
+  color: #fff !important;
+  border-color: var(--admin-accent) !important;
+}
+.platform-shortcuts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.platform-shortcuts li {
+  border-bottom: 1px solid var(--admin-line);
+  padding: 16px 0;
+}
+.platform-shortcuts li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.platform-shortcuts button,
+.platform-shortcuts a {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  color: var(--admin-ink);
+  text-align: left;
+  font-size: 15px;
+}
+.platform-shortcuts p {
+  color: var(--admin-muted);
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+.platform-footnote {
+  color: var(--admin-muted);
+  font-size: 12px;
+  margin-top: 22px;
+}
+.platform-error,
+.platform-notice {
+  padding: 14px 18px;
+  border: 1px solid var(--admin-line);
+  border-radius: 8px;
+  margin: 16px 0;
+  line-height: 1.7;
+}
+.platform-error {
+  color: #a33f35;
+  background: #fff1ea;
+}
+.platform-error a {
+  margin-left: 14px;
+}
+.platform-notice {
+  color: #426a4a;
+  background: #edf6ec;
+}
+.platform-section-head {
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: start;
+}
+.platform-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  padding: 16px 0;
+}
+.platform-filters label {
+  flex: 1;
+  min-width: 120px;
+  font-size: 12px;
+}
+.platform-filters input,
+.platform-filters select,
+.platform-dialog select {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--admin-line);
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+  border-radius: 7px;
+  padding: 10px;
+  min-height: 44px;
+  margin-top: 6px;
+  font: inherit;
+}
+.platform-count {
+  font-size: 12px;
+  color: var(--admin-muted);
+}
+.platform-account {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--admin-line);
+}
+.account-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background: #edf0e6;
+  color: var(--admin-accent);
+  border-radius: 50%;
+  font:
+    15px ui-monospace,
+    monospace;
+}
+.account-identity {
+  flex: 1;
+  min-width: 150px;
+}
+.account-identity strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-weight: 400;
+}
+.account-identity small {
+  color: var(--admin-muted);
+  font-size: 11px;
+}
+.role-tag {
+  background: #edf0e6;
+  color: var(--admin-accent);
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.account-enabled,
+.account-disabled {
+  font-size: 12px;
+}
+.platform-audit {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+.platform-audit li {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--admin-line);
+}
+.platform-audit li > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+}
+.platform-audit strong {
+  font-weight: 400;
+}
+.platform-audit time,
+.platform-audit small {
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+.platform-audit p {
+  margin: 8px 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.platform-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  margin-top: 24px;
+  font-size: 13px;
+}
+.platform-dialog {
+  width: min(480px, calc(100vw - 32px));
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--admin-line);
+  border-radius: 14px;
+  padding: 30px;
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+  box-shadow: 0 25px 100px #172a2444;
+}
+.platform-dialog::backdrop {
+  background: #192c2355;
+  backdrop-filter: blur(3px);
+}
+.platform-dialog h2 {
+  font-size: 25px;
+  font-weight: 400;
+  margin: 0 0 24px;
+  overflow-wrap: anywhere;
+}
+.platform-dialog label {
+  display: block;
+  margin: 20px 0;
+}
+.platform-checkbox {
+  display: flex !important;
+  gap: 10px;
+  align-items: center;
+}
+.platform-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--admin-accent);
+}
+.platform-role-help {
+  background: var(--admin-bg);
+  padding: 14px;
+  border: 1px solid var(--admin-line);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.platform-dialog-actions {
+  display: flex;
+  justify-content: end;
+  gap: 12px;
+  margin-top: 28px;
+}
+html[data-theme="dark"] .admin-platform {
+  --admin-bg: #1e2924;
+  --admin-surface: #26312b;
+  --admin-ink: #e5e9df;
+  --admin-muted: #b0baae;
+  --admin-line: #455448;
+  --admin-accent: #b5ccae;
+}
+html[data-theme="dark"] .registration-panel {
+  background: linear-gradient(135deg, #304633, var(--admin-surface));
+}
+html[data-theme="dark"] .account-avatar,
+html[data-theme="dark"] .role-tag {
+  background: #354638;
+}
+html[data-theme="dark"] .account-enabled,
+html[data-theme="dark"] .state-open {
+  color: #b2d5ad;
+}
+html[data-theme="dark"] .account-disabled,
+html[data-theme="dark"] .state-closed {
+  color: #edb98b;
+}
+html[data-theme="dark"] .platform-notice {
+  background: #304633;
+  color: #c1dcba;
+}
+html[data-theme="dark"] .platform-error {
+  background: #492e29;
+  color: #ffc3ad;
+}
+html[data-theme="dark"] .admin-platform button.platform-primary,
+html[data-theme="dark"] .registration-state button {
+  color: #1e2924 !important;
+}
+@media (max-width: 1100px) {
+  .platform-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .platform-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 650px) {
+  .platform-head {
+    display: block;
+  }
+  .platform-head > a {
+    display: inline-block;
+    margin-top: 12px;
+  }
+  .platform-tabs {
+    gap: 20px;
+  }
+  .platform-tabs a {
+    margin-left: 0;
+  }
+  .platform-metrics {
+    gap: 12px;
+  }
+  .platform-metrics article {
+    padding: 17px;
+  }
+  .platform-metrics strong {
+    font-size: 30px;
+  }
+  .platform-panel {
+    padding: 20px;
+  }
+  .platform-section-head {
+    display: block;
+  }
+  .platform-account {
+    gap: 12px;
+  }
+  .account-identity {
+    flex-basis: calc(100% - 60px);
+  }
+  .platform-dialog {
+    padding: 22px;
+  }
+  .platform-pagination {
+    gap: 12px;
+  }
+}

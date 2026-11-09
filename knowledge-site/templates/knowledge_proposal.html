@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}审阅笔记修改{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="/static/knowledge-artifacts.css?v=20261107a"><script src="/static/knowledge-proposal.js?v=20261107a" defer></script>{% endblock %}
+{% block content %}
+<section id="proposal" data-id="{{ draft.id }}" data-version="{{ draft.version }}" data-csrf="{{ csrf }}">
+  <div class="page-head"><h1>审阅笔记修改</h1><p>{{ draft.title }}</p><a href="/explore/write?draft_id={{ draft.id }}">返回修改草稿</a></div>
+  <p>选择有编辑权限的笔记，生成完整差异。确认后按当前版本保存，并保留版本历史。</p>
+  {% if draft.private_only %}<p>所选资料生成的草稿只能存入私密笔记。</p>{% endif %}
+  <form id="proposal-search" class="filter-form"><label for="proposal-query">查找目标笔记</label><input id="proposal-query" maxlength="100"><button class="button button-light" type="submit">查找笔记</button></form>
+  <form id="proposal-preview-form" class="stack-form">
+    <label for="proposal-target">目标笔记</label><select id="proposal-target" disabled></select>
+    <label for="proposal-mode">修改方式</label><select id="proposal-mode"><option value="append">追加到末尾</option><option value="replace">替换全文</option></select>
+    <button id="proposal-preview" class="button" type="submit" disabled>生成差异供审阅</button>
+  </form>
+  <p id="proposal-status" role="status"></p>
+  <section id="proposal-review" hidden><h2>完整修改差异</h2><p id="proposal-target-summary"></p><pre id="proposal-diff" class="review-answer" tabindex="0"></pre>
+    <form id="proposal-apply-form" class="stack-form"><label><input id="proposal-confirm" type="checkbox">我已核对完整差异、目标笔记及其可见范围。</label><button id="proposal-apply" type="submit" class="button" disabled>确认保存修改</button></form>
+  </section>
+  <a id="proposal-saved" class="button" hidden>打开已保存的笔记 ↗</a>
+</section>
+{% endblock %}

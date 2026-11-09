@@ -1,0 +1,2 @@
+# Optional offline semantic retrieval; ordinary search and DeepSeek do not need this.
+sentence-transformers==5.5.1

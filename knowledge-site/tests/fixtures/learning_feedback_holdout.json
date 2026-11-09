@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "dataset_id": "learning-feedback-holdout-v1",
+  "frozen_on": "2026-11-07",
+  "provenance": "Fresh agent-authored synthetic topics, frozen after feedback prompt v2 and before its first holdout run. No personal material or real learner records.",
+  "human_reviewed": false,
+  "purpose": "Untuned topic holdout for v2. Expected labels remain provisional until reviewed by a human; do not tune v2 using this run.",
+  "cases": [
+    {"id":"binary-search-correct","category":"correct-paraphrase","question":"有序数组上的二分查找为什么是 O(log n)？","reference_answer":"每次比较后排除约一半候选区间，经过对数次缩减即可把候选范围缩小到常数规模。","answer":"每一步都把待查区间大约减半，所以从 n 个元素减到一个需要对数级步数。","hint_used":false,"expected_verdicts":["correct"],"must_address":[]},
+    {"id":"density-correct","category":"correct-with-hint","question":"密度、质量和体积的基本关系是什么？","reference_answer":"密度等于质量除以体积，计算时各物理量的单位需一致。","answer":"用质量除以体积求密度，同时要统一使用相容的计量单位。","hint_used":true,"expected_verdicts":["correct"],"must_address":[]},
+    {"id":"generator-correct","category":"correct-paraphrase","question":"生成器与预先构造完整列表在取值时机上有何区别？","reference_answer":"生成器通常在迭代请求时逐步产生值；列表在构造后已保存其元素。","answer":"生成器是需要下一个值时再算，列表则先把元素构造并存放好。","hint_used":false,"expected_verdicts":["correct"],"must_address":[]},
+    {"id":"acceleration-partial","category":"missing-dimension","question":"速度和加速度分别描述什么变化？","reference_answer":"速度描述位置随时间的变化率；加速度描述速度随时间的变化率。","answer":"速度是物体位置随时间的变化率。","hint_used":false,"expected_verdicts":["partial"],"must_address":[["加速度","速度随时间"]]},
+    {"id":"left-join-partial","category":"missing-condition","question":"SQL LEFT JOIN 怎样处理左表行与没有匹配的右表列？","reference_answer":"保留左表行，匹配时取对应右表列；无右表匹配时相应右表列以 NULL 补齐。","answer":"LEFT JOIN 会保留左表中的行。","hint_used":false,"expected_verdicts":["partial"],"must_address":[["NULL","空值","无匹配"]]},
+    {"id":"complexity-partial","category":"missing-boundary","question":"O(n) 能说明输入增大时的增长趋势和每次运行的具体耗时吗？","reference_answer":"它描述渐进增长上界，不能单独给出具体机器上一次运行的秒数，常数因子和输入细节仍会影响实际耗时。","answer":"O(n) 表示随输入规模增大，复杂度的增长上界是线性量级。","hint_used":false,"expected_verdicts":["partial"],"must_address":[["耗时","秒","常数","实际"]]},
+    {"id":"sql-null-wrong","category":"critical-error","question":"SQL 用 x = NULL 能否可靠筛选出 x 为空的行？","reference_answer":"不能。与 NULL 的常规相等比较不能代替空值判断，应使用 IS NULL。","answer":"能，写 x = NULL 就会选出所有空值行。","hint_used":false,"expected_verdicts":["needs_review"],"must_address":[["IS NULL","不能","不正确"]]},
+    {"id":"outlier-wrong","category":"critical-error","question":"单个极端异常值通常更容易影响均值还是中位数？","reference_answer":"均值通常更容易受极端异常值影响，中位数相对稳健。","answer":"中位数更容易被一个极端值拉偏，均值通常不受影响。","hint_used":false,"expected_verdicts":["needs_review"],"must_address":[["均值","中位数","相反"]]},
+    {"id":"props-wrong","category":"critical-error","question":"Vue 组件能否通过给 props 属性直接重新赋值来修改父组件状态？","reference_answer":"props 遵循单向数据流，子组件不应直接重新赋值 props 属性；需要通知父组件更新。这里不讨论内部嵌套对象的修改。","answer":"可以，子组件直接重写 props 属性就是推荐的父子状态同步方式。","hint_used":false,"expected_verdicts":["needs_review"],"must_address":[["单向","父组件","不应","不能"]]},
+    {"id":"experiment-unknown","category":"insufficient-reference","question":"虚构实验 R42 的最优学习率是多少？","reference_answer":"实验尚未选择模型和数据集，也没有调参结果。","answer":"最优学习率是 0.003。","hint_used":false,"expected_verdicts":["uncertain"],"must_address":[["依据","数据","尚未","不足","确定"]]},
+    {"id":"launch-conflict","category":"conflicting-reference","question":"虚构系统 Z 的首次上线年份是什么？","reference_answer":"同一上线事件的一页档案写 2024 年，另一页写 2025 年，两页没有给出可区分的条件，尚未考证。","answer":"首次上线是 2025 年。","hint_used":false,"expected_verdicts":["uncertain"],"must_address":[["冲突","不一致","核对","考证"]]},
+    {"id":"continuity-unknown","category":"insufficient-reference","question":"函数 g 在 0 处是否连续？","reference_answer":"资料只给出函数名 g，没有表达式、图像或 0 附近的定义。","answer":"一定连续。","hint_used":false,"expected_verdicts":["uncertain"],"must_address":[["不足","无法","缺","未","依据"]]}
+  ]
+}
