@@ -51,13 +51,31 @@ class AgentInput(BaseModel):
 class ProjectInput(AgentInput):
     title: str = Field(min_length=1, max_length=120)
     goal: str = Field(default='', max_length=2000)
+    kind: Literal['container', 'learning'] = 'container'
+    note_ids: list[Annotated[int, Field(gt=0)]] = Field(default_factory=list, max_length=12)
 
 
-class ProjectEdit(ProjectInput):
+class ProjectEdit(AgentInput):
+    title: str = Field(min_length=1, max_length=120)
+    goal: str = Field(default='', max_length=2000)
     expected_version: int = Field(ge=1)
     progress: str = Field(default='', max_length=2000)
     next_action: str = Field(default='', max_length=1000)
     status: Literal['active', 'archived'] = 'active'
+
+
+class ScopeInput(AgentInput):
+    note_ids: list[Annotated[int, Field(gt=0)]] = Field(default_factory=list, max_length=12)
+
+
+class ResearchInput(AgentInput):
+    topic: str = Field(min_length=1, max_length=1000)
+    requirements: str = Field(default='', max_length=2000)
+    idempotency_key: str = Field(min_length=8, max_length=100)
+
+
+class RetryInput(AgentInput):
+    idempotency_key: str = Field(min_length=8, max_length=100)
 
 
 class ResourceInput(AgentInput):
@@ -114,7 +132,7 @@ class RunInput(AgentInput):
             raise ValueError('Legacy runs use public notes')
         if self.kind in {'knowledge', 'assessment'} and (self.web_search or self.draft_id):
             raise ValueError('Knowledge runs use local evidence and separate results')
-        if self.kind == 'assessment' and (not self.attempt_id or self.requirements or self.project_id):
+        if self.kind == 'assessment' and (not self.attempt_id or self.requirements):
             raise ValueError('Assessment must reference a saved attempt')
         return self
 

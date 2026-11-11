@@ -4,7 +4,7 @@
 {% block extra_head %}
 <link rel="stylesheet" href="/static/explore.css?v=20261107b">
 <script src="/static/explore-trial.js?v=20261102a" defer></script>
-<script src="/static/explore.js?v=20261107d" defer></script>
+<script src="/static/explore.js?v=20261109a" defer></script>
 {% if workspace_enabled %}
 <link rel="stylesheet" href="/static/agent-workspace.css?v=20261026b">
 <script src="/static/agent-explore.js?v=20261107a" defer></script>
@@ -47,6 +47,7 @@
         <div id="explore-note-options"></div><div id="explore-picked-notes"></div>
         <p id="explore-selection-status" class="explore-help" role="status"></p>
         <button type="button" id="explore-apply-selection">使用所选资料开启新会话</button>
+        {% if workspace_enabled %}<p><a id="explore-learning-project" href="/learn/projects">用这些笔记开始学习项目</a></p>{% endif %}
       </details>
       {% endif %}
       {% include "explore_trial.html" %}

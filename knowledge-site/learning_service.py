@@ -88,6 +88,8 @@ def initialize_learning(db):
             PRIMARY KEY(session_id,version)
         );
     ''')
+    if 'project_id' not in {row['name'] for row in db.execute('PRAGMA table_info(learning_sessions)')}:
+        db.execute('ALTER TABLE learning_sessions ADD COLUMN project_id TEXT REFERENCES agent_projects(id) ON DELETE SET NULL')
 
 
 def fingerprint(card):
@@ -114,15 +116,37 @@ def session_for(db, uid, sid):
     return session
 
 
-def start(db, uid, card_id, key):
+def owned_learning_project(db, uid, project_id, note_id):
+    from agent_projects import own_project, scope_ids
+    project = own_project(db, uid, project_id)
+    if project.get('kind') != 'learning' or project['status'] != 'active':
+        raise HTTPException(409, '请从进行中的学习项目开始练习。')
+    if note_id not in scope_ids(db, project_id):
+        raise HTTPException(409, '这张卡片不在学习项目的资料范围内。')
+    return project
+
+
+def attach_project(db, session, project_id):
+    current = session['project_id'] if 'project_id' in session.keys() else None
+    if not project_id or current == project_id:
+        return
+    if current:
+        raise HTTPException(409, '这次练习已属于其他项目。')
+    db.execute('UPDATE learning_sessions SET project_id=?,version=version+1,updated_at=? WHERE id=?', (project_id, int(time.time()), session['id']))
+
+
+def start(db, uid, card_id, key, project_id=None):
     if not 8 <= len(key) <= 100:
         raise HTTPException(400, '练习请求标识无效。')
     card = card_for(db, uid, card_id)
+    if project_id:
+        owned_learning_project(db, uid, project_id, card['note_id'])
     existing = db.execute('SELECT session_id FROM learning_session_keys WHERE user_id=? AND key=?', (uid, key)).fetchone()
     if existing:
         session = session_for(db, uid, existing['session_id'])
         if session['card_id'] != card_id:
             raise HTTPException(409, '请求标识已用于其他练习。')
+        attach_project(db, session, project_id)
         return session['id']
     current = db.execute("SELECT * FROM learning_sessions WHERE user_id=? AND card_id=? AND exercise_sha=? AND status IN ('answering','submitted')",
                          (uid, card_id, fingerprint(card))).fetchone()
@@ -131,12 +155,14 @@ def start(db, uid, card_id, key):
         if job and job['status'] in {'failed', 'cancelled'}:
             db.execute("UPDATE learning_sessions SET status='archived',version=version+1 WHERE id=?", (current['id'],))
             current = None
+    if current and project_id:
+        attach_project(db, current, project_id)
     sid = current['id'] if current else secrets.token_urlsafe(24)
     if current is None:
         now = int(time.time())
         refs = [{'kind': 'account_note', 'note_id': card['note_id'], 'body_sha': card['body_sha'], 'user_id': uid}]
-        db.execute('''INSERT INTO learning_sessions(id,user_id,card_id,exercise_sha,question,reference_answer,sources_json,created_at,updated_at)
-            VALUES(?,?,?,?,?,?,?,?,?)''', (sid, uid, card_id, fingerprint(card), card['question'], card['answer'], compact_json(refs), now, now))
+        db.execute('''INSERT INTO learning_sessions(id,user_id,card_id,exercise_sha,question,reference_answer,sources_json,project_id,created_at,updated_at)
+            VALUES(?,?,?,?,?,?,?,?,?,?)''', (sid, uid, card_id, fingerprint(card), card['question'], card['answer'], compact_json(refs), project_id, now, now))
     db.execute('INSERT INTO learning_session_keys VALUES(?,?,?)', (uid, key, sid))
     return sid
 
@@ -144,6 +170,7 @@ def start(db, uid, card_id, key):
 def present(db, uid, sid):
     session = session_for(db, uid, sid)
     result = {key: session[key] for key in ('id', 'card_id', 'question', 'answer_draft', 'hint_used', 'version', 'status', 'updated_at')}
+    result['project_id'] = session['project_id'] if 'project_id' in session.keys() else None
     source = json.loads(session['sources_json'])[0]
     result['source_url'] = f"/n/{source['note_id']}"
     attempt = db.execute('SELECT * FROM learning_attempts WHERE session_id=?', (sid,)).fetchone()
@@ -183,8 +210,9 @@ def submit(app, db, uid, sid, version, answer, hint_used):
         raise HTTPException(409, '学习记录已变化，当前输入请先保留并重新读取。')
     aid = secrets.token_urlsafe(24)
     db.execute('INSERT INTO learning_attempts(id,session_id,answer,hint_used,created_at) VALUES(?,?,?,?,?)', (aid, sid, answer, int(hint_used), int(time.time())))
-    request = RunInput(kind='assessment', topic=session['question'], attempt_id=aid, memory_mode='off', max_tokens=48000,
-                       idempotency_key='learning-' + aid)
+    project_id = session['project_id'] if 'project_id' in session.keys() else None
+    request = RunInput(kind='assessment', topic=session['question'], attempt_id=aid, project_id=project_id or None,
+                       memory_mode='off', max_tokens=48000, idempotency_key='learning-' + aid)
     job = app.state.agent_runtime.create(db, uid, request)
     db.execute('UPDATE learning_attempts SET job_id=? WHERE id=?', (job['id'], aid))
     db.execute("UPDATE learning_sessions SET answer_draft=?,hint_used=?,status='submitted',version=version+1,updated_at=? WHERE id=?", (answer, int(hint_used), int(time.time()), sid))
@@ -200,6 +228,12 @@ def prepare_assessment(runtime, db, uid, data):
     session = session_for(db, uid, attempt['session_id'])
     if attempt['job_id'] or data['topic'] != session['question']:
         raise HTTPException(409, '这次作答已经关联反馈任务。')
+    bound = session['project_id'] if 'project_id' in session.keys() else None
+    if (data.get('project_id') or None) != (bound or None):
+        raise HTTPException(409, '练习不属于这个学习项目。')
+    if bound:
+        card = card_for(db, uid, session['card_id'])
+        owned_learning_project(db, uid, bound, card['note_id'])
     data.update(source_refs=json.loads(session['sources_json']), scope='selected', note_ids=[], note_id=None,
                 engine_version=PROMPT_VERSION, model=str(getattr(runtime.app.state.explore_provider, 'model', 'test-provider')), memory_mode='off')
 

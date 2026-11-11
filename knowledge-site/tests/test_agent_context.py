@@ -274,7 +274,7 @@ class ContextUnitTests(unittest.TestCase):
             with self.assertRaises(sqlite3.Error): migrate_agent(db)
         self.assertIsNone(db.execute("SELECT name FROM sqlite_master WHERE name='must_rollback'").fetchone())
         migrate_agent(db); migrate_agent(db)
-        self.assertEqual(db.execute('SELECT max(version) FROM agent_schema_migrations').fetchone()[0], 6)
+        self.assertEqual(db.execute('SELECT max(version) FROM agent_schema_migrations').fetchone()[0], 7)
         db.close()
 
     def test_summary_transport_has_bounded_json_mode_and_hides_upstream_errors(self):

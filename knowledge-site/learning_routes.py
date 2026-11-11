@@ -57,7 +57,7 @@ def register_learning(app, path, api):
             db.execute('BEGIN IMMEDIATE')
             user, csrf = actor(db, request)
             api['require_csrf'](form, csrf)
-            sid = learning.start(db, user['id'], card_id, form.get('practice_key', ''))
+            sid = learning.start(db, user['id'], card_id, form.get('practice_key', ''), form.get('project_id') or None)
         return RedirectResponse('/learn/practice/' + sid, 303)
 
     @app.get('/learn/practice/{sid}')

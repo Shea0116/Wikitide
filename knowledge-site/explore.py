@@ -463,8 +463,12 @@ def register_explore(app, db_path, g):
             notes = scoped_notes(db, user, None if scope == 'selected' else session['note_id'], scope, ids)
             note = notes[0] if len(notes) == 1 else None
             link = db.execute('SELECT project_id FROM agent_session_links WHERE session_id=?', (session_id,)).fetchone() if not is_guest(user) else None
+            project_kind = None
+            if link and link['project_id']:
+                kind = db.execute('SELECT kind FROM agent_projects WHERE id=?', (link['project_id'],)).fetchone()
+                project_kind = kind['kind'] if kind else None
             return {"id": session_id, "title": session["title"], "note_id": session["note_id"],
-                    "project_id": link['project_id'] if link else None, "scope": scope,
+                    "project_id": link['project_id'] if link else None, "project_kind": project_kind, "scope": scope,
                     "note_ids": ids, "notes": [{'id': row['id'], 'title': row['title']} for row in notes],
                     "scope_version": selection_version(ids if scope == 'selected' else [session['note_id']] if session['note_id'] is not None else []),
                     "note_title": note["title"] if note else "", "messages": visible_messages(db, session_id, user)}
@@ -498,8 +502,7 @@ def register_explore(app, db_path, g):
                 raise HTTPException(403, '资料补查尚未启用。')
             if data.project_id:
                 if is_guest(user) or not app.state.agent_memory.enabled: raise HTTPException(403,'项目仅向已启用工作台的登录账户开放。')
-                from agent_projects import own_project
-                own_project(db,user['id'],data.project_id)
+                app.state.agent_projects.prepare_explore(db, user['id'], data.project_id, data.scope, data.note_id, data.note_ids, data.session_id)
             notes = scoped_notes(db, user, data.note_id, data.scope, data.note_ids)
             selected_ids = [note['id'] for note in notes] if data.scope == 'selected' else []
             selection_refs = [{'kind': 'account_note', 'note_id': note['id'], 'body_sha': note['body_sha'], 'user_id': user['id']} for note in notes] if selected_ids else []
@@ -527,6 +530,8 @@ def register_explore(app, db_path, g):
                 if data.project_id:
                     db.execute('INSERT INTO agent_session_links(session_id,project_id) VALUES(?,?)',(session_id,data.project_id))
                     db.execute('INSERT INTO agent_project_links VALUES(?,?,?,?)',(data.project_id,'session',session_id,now))
+            if data.project_id:
+                app.state.agent_projects.adopt_thread(db, data.project_id, session_id)
             db.execute(f"DELETE FROM {explore_table(user, 'requests')} WHERE created_at<?", (now - 86400,))
             recent, daily = db.execute(f"""SELECT coalesce(sum(created_at>?),0),count(*) FROM {explore_table(user, 'requests')}
                 WHERE user_id=?""", (now - 300, user["id"])).fetchone()

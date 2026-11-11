@@ -58,7 +58,7 @@
     if (!more) $('project-list').replaceChildren();
     for (const item of data.projects) {
       const row = node('article', '', 'agent-list-row'), heading = node('h3', '');
-      heading.append(link(item.title, `/agent/projects/${encodeURIComponent(item.id)}`));
+      heading.append(link(item.title, item.kind === 'learning' ? `/learn/projects/${encodeURIComponent(item.id)}` : `/agent/projects/${encodeURIComponent(item.id)}`));
       row.append(heading, node('p', item.goal || window.WikitideI18n.t("尚未填写目标")), node('small', item.status === 'archived' ? window.WikitideI18n.t("已归档") : window.WikitideI18n.t("进行中"), 'agent-meta'));
       $('project-list').append(row);
     }

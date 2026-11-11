@@ -3,7 +3,7 @@
 {% block extra_head %}<link rel="stylesheet" href="/static/practice.css?v=20261107a"><script src="/static/practice.js?v=20261107b" defer></script>{% endblock %}
 {% block content %}
 <section id="practice" data-id="{{ session.id }}" data-csrf="{{ csrf }}">
-  <div class="page-head"><p class="eyebrow">独立作答</p><h1>{{ session.question }}</h1><a href="/learn">返回学习与复习</a></div>
+  <div class="page-head"><p class="eyebrow">独立作答</p><h1>{{ session.question }}</h1><a href="/learn">返回学习与复习</a>{% if session.project_id %} · <a href="/learn/projects/{{ session.project_id }}">返回学习项目</a>{% endif %}</div>
   <p>先写下自己的解释，再提交查看卡片答案和参考反馈。</p>
   <a href="{{ session.source_url }}" target="_blank" rel="noopener">核对原文章</a>
   <form id="practice-answer-form" class="stack-form">

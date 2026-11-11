@@ -64,6 +64,8 @@ class RuntimeService:
         if external['project_id']:
             project = own_project(db, uid, external['project_id'])
             if project['status'] != 'active': raise HTTPException(409, '请先恢复项目。')
+            if external['kind'] == 'knowledge':
+                self.app.state.agent_projects.bind_knowledge_request(db, uid, external)
         if external['kind'] == 'knowledge':
             from knowledge_jobs import prepare_knowledge
             prepare_knowledge(self, db, uid, external)
